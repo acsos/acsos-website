@@ -1,0 +1,25 @@
+/* Custom CSS to support unique elements generated for the ACSOS website on
+	Forty by HTML5 UP
+	Nathan Lloyd 6th November 2025
+*/
+
+
+/* To modify the div which holds general chair and program chair info in the prior series table */
+#series-chair-formatting {
+	
+
+}
+#series-chair-formatting ul {
+	list-style-type: none;
+	padding: 0; /* Remove default padding on list*/
+
+}
+
+/* To modify the "jump to award type" buttons on the awards page */
+
+#award-buttons a {
+	margin:0.3em;
+}
+#award-buttons {
+	padding:0;
+}
