@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SecondaryBanner from '../components/SecondaryBanner.astro';
+import { getCollection } from 'astro:content';
+
+// Get all leadership members and sort by order
+const allLeadership = await getCollection('leadership');
+
+console.log('Total leadership members:', allLeadership.length);
+console.log('Sample member:', allLeadership[0]?.data);
+
+const steeringCommittee = allLeadership
+	.filter(member => member.data.groups.includes('steering'))
+	.sort((a, b) => a.data.order - b.data.order);
+
+const advisoryBoard = allLeadership
+	.filter(member => member.data.groups.includes('advisory'))
+	.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+console.log('Steering Committee members:', steeringCommittee.length);
+console.log('Advisory Board members:', advisoryBoard.length);
+---
+
+<BaseLayout 
+	title="ACSOS Leadership" 
+	currentPage="leadership"
+	headerStyle="alt style6"
+>
+	<SecondaryBanner 
+		title="Leadership"
+		styleClass="alt style6"
+	>
+		<p>The ACSOS community is guided by a Steering Committee and supported by an Advisory Board, whose members are listed below.</p>
+	</SecondaryBanner>
+
+	<div id="main">
+		<!-- Steering Committee Section -->
+		<section id="one">
+			<div class="inner">
+				<header class="major">
+					<h2>Steering Committee</h2>
+				</header>
+				
+				<div class="row gtr-50 gtr-uniform">
+					{steeringCommittee.map((member) => (
+						<div class="col-4 col-6-medium col-12-small">
+							<div class="box" style="height: 100%; display: flex; flex-direction: column;">
+								<div style="text-align: center; margin-bottom: 1em;">
+									<span class="image" style="display: inline-block; width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+										<img 
+											src={member.data.image || '/images/design/pic10.jpg'} 
+											alt={member.data.name}
+											style="width: 100%; height: 100%; object-fit: cover;"
+										/>
+									</span>
+								</div>
+								<div style="flex: 1; text-align: center;">
+									<h3 style="margin-bottom: 0.5em; font-size: 1.1em;">{member.data.name}</h3>
+									{member.data.role && (
+										<p style="margin-bottom: 0.5em; color: #f2849e; font-weight: bold; font-size: 0.9em;">
+											{member.data.role}
+										</p>
+									)}
+									<p style="margin-bottom: 0; font-size: 0.9em; color: #888;">
+										{member.data.affiliation}
+									</p>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- Advisory Board Section -->
+		<section id="two" style="background-color: rgba(0,0,0,0.025);">
+			<div class="inner">
+				<header class="major">
+					<h2>Advisory Board</h2>
+				</header>
+				
+				<div class="row gtr-50 gtr-uniform">
+					{advisoryBoard.map((member) => (
+						<div class="col-4 col-6-medium col-12-small">
+							<div class="box" style="height: 100%; display: flex; flex-direction: column;">
+								<div style="text-align: center; margin-bottom: 1em;">
+									<span class="image" style="display: inline-block; width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+										<img 
+											src={member.data.image || '/images/design/pic10.jpg'} 
+											alt={member.data.name}
+											style="width: 100%; height: 100%; object-fit: cover;"
+										/>
+									</span>
+								</div>
+								<div style="flex: 1; text-align: center;">
+									<h3 style="margin-bottom: 0.5em; font-size: 1.1em;">{member.data.name}</h3>
+									<p style="margin-bottom: 0; font-size: 0.9em; color: #888;">
+										{member.data.affiliation}
+									</p>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+	</div>
+</BaseLayout>

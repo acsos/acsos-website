@@ -1,0 +1,113 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+	currentPage?: string;
+	headerStyle?: string;
+}
+
+const { title, description, currentPage, headerStyle } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/non-template.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+		<div id="wrapper">
+			<!-- Header -->
+			<header id="header" class={headerStyle || 'alt'}>
+				<a href="/" class="logo">
+					<strong>ACSOS</strong>
+					<span>Autonomic Computing and Self-Organizing Systems</span>
+				</a>
+				<nav>
+					<a href="#menu">Menu</a>
+				</nav>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<ul class="links">
+					<li>
+						<a href="/" class:list={[currentPage === 'home' && 'button primary fit']}>
+							Home
+						</a>
+					</li>
+					<li>
+						<a href="/series" class:list={[currentPage === 'series' && 'button primary fit']}>
+							Conference Series
+						</a>
+					</li>
+					<li>
+						<a href="/proceedings" class:list={[currentPage === 'proceedings' && 'button primary fit']}>
+							Conference Proceedings
+						</a>
+					</li>
+					<li>
+						<a href="/awards" class:list={[currentPage === 'awards' && 'button primary fit']}>
+							Conference Awards
+						</a>
+					</li>
+					<li>
+						<a href="/hosting" class:list={[currentPage === 'hosting' && 'button primary fit']}>
+							Hosting ACSOS
+						</a>
+					</li>
+					<li>
+						<a href="/leadership" class:list={[currentPage === 'leadership' && 'button primary fit']}>
+							Leadership
+						</a>
+					</li>
+				</ul>
+			</nav>
+
+			<!-- Main Content Slot -->
+			<slot />
+
+			<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="icons">
+						<li>
+							<a href="https://github.com/acsos" class="icon brands alt fa-github">
+								<span class="label">GitHub</span>
+							</a>
+						</li>
+						<li>
+							<a href="https://www.linkedin.com/company/acsos/" class="icon brands alt fa-linkedin-in">
+								<span class="label">LinkedIn</span>
+							</a>
+						</li>
+						<li>
+							<a href="https://fediscience.org/@ACSOSconf" class="icon brands alt fa-mastodon">
+								<span class="label">Mastodon</span>
+							</a>
+						</li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; ACSOS Conference. All rights reserved.</li>
+						<li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+		</div>
+
+		<!-- Scripts -->
+		<script is:inline src="/assets/js/jquery.min.js"></script>
+		<script is:inline src="/assets/js/jquery.scrolly.min.js"></script>
+		<script is:inline src="/assets/js/jquery.scrollex.min.js"></script>
+		<script is:inline src="/assets/js/browser.min.js"></script>
+		<script is:inline src="/assets/js/breakpoints.min.js"></script>
+		<script is:inline src="/assets/js/util.js"></script>
+		<script is:inline src="/assets/js/main.js"></script>
+	</body>
+</html>

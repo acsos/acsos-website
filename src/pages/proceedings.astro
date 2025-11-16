@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SecondaryBanner from '../components/SecondaryBanner.astro';
+
+// ACSOS Proceedings (2020-2025)
+const acsosProceedings = [
+	{ year: 2025, main: "https://ieeexplore.ieee.org/xpl/conhome/11217545/proceeding", companion: "" },
+	{ year: 2024, main: "https://ieeexplore.ieee.org/xpl/conhome/10771158/proceeding", companion: "https://ieeexplore.ieee.org/xpl/conhome/10766048/proceeding" },
+	{ year: 2023, main: "https://ieeexplore.ieee.org/xpl/conhome/10336009/proceeding", companion: "https://ieeexplore.ieee.org/xpl/conhome/10335906/proceeding" },
+	{ year: 2022, main: "https://ieeexplore.ieee.org/xpl/conhome/9934996/proceeding", companion: "https://ieeexplore.ieee.org/xpl/conhome/9935058/proceeding" },
+	{ year: 2021, main: "https://ieeexplore.ieee.org/xpl/conhome/9659313/proceeding", companion: "https://ieeexplore.ieee.org/xpl/conhome/9599146/proceeding" },
+	{ year: 2020, main: "https://ieeexplore.ieee.org/xpl/conhome/9189891/proceeding", companion: "https://ieeexplore.ieee.org/xpl/conhome/9190002/proceeding" },
+];
+
+// Pre-merger Proceedings (2004-2019)
+const preMergerProceedings = [
+	{ year: 2019, icac: "https://ieeexplore.ieee.org/xpl/conhome/8826228/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/8765675/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/8785421/proceeding" },
+	{ year: 2018, icac: "https://ieeexplore.ieee.org/xpl/conhome/8496900/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/8613687/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/8598461/proceeding" },
+	{ year: 2017, icac: "https://ieeexplore.ieee.org/xpl/conhome/8004094/proceeding", iccac: "https://ieeexplore.ieee.org/xpl/conhome/8063635/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/8063636/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/8063634/proceeding" },
+	{ year: 2016, icac: "https://ieeexplore.ieee.org/xpl/conhome/7572801/proceeding", iccac: "https://ieeexplore.ieee.org/xpl/conhome/7771796/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/7774239/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/7784661/proceeding" },
+	{ year: 2015, icac: "https://ieeexplore.ieee.org/xpl/conhome/7264388/proceeding", iccac: "https://ieeexplore.ieee.org/xpl/conhome/7311005/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/7304000/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/7305895/proceeding" },
+	{ year: 2014, icac: "https://www.usenix.org/conference/icac14", iccac: "https://ieeexplore.ieee.org/xpl/conhome/7021860/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/6998166/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/7055964/proceeding" },
+	{ year: 2013, icac: "https://www.usenix.org/conference/icac13", cac: "https://dl.acm.org/citation.cfm?id=2494621", saso: "https://ieeexplore.ieee.org/xpl/conhome/6657101/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/6802827/proceeding" },
+	{ year: 2012, icac: "https://dl.acm.org/citation.cfm?id=2371536", saso: "https://ieeexplore.ieee.org/xpl/conhome/6391323/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/6497699/proceeding" },
+	{ year: 2011, icac: "https://dl.acm.org/citation.cfm?doid=1998582", saso: "https://ieeexplore.ieee.org/xpl/conhome/6062618/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/6114263/proceeding" },
+	{ year: 2010, icac: "https://dl.acm.org/citation.cfm?doid=1809049", saso: "https://ieeexplore.ieee.org/xpl/conhome/5628460/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/5729428/proceeding" },
+	{ year: 2009, icac: "https://dl.acm.org/citation.cfm?doid=1555228", saso: "https://ieeexplore.ieee.org/xpl/conhome/5298382/proceeding" },
+	{ year: 2008, icac: "https://ieeexplore.ieee.org/xpl/conhome/4550812/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/4663390/proceeding", fasw: "https://ieeexplore.ieee.org/xpl/conhome/4800625/proceeding" },
+	{ year: 2007, icac: "https://ieeexplore.ieee.org/xpl/conhome/4273085/proceeding", saso: "https://ieeexplore.ieee.org/xpl/conhome/4274871/proceeding" },
+	{ year: 2006, icac: "https://ieeexplore.ieee.org/xpl/conhome/11035/proceeding" },
+	{ year: 2005, icac: "https://ieeexplore.ieee.org/xpl/conhome/10030/proceeding" },
+	{ year: 2004, icac: "https://ieeexplore.ieee.org/xpl/conhome/9121/proceeding" },
+];
+---
+
+<BaseLayout 
+	title="ACSOS Conference Proceedings" 
+	currentPage="proceedings"
+	headerStyle="alt style3"
+>
+	<SecondaryBanner 
+		title="Proceedings"
+		styleClass="alt style3"
+	>
+		<p>Each edition of the conference publishes two proceedings: the main ACSOS Proceedings and the companion volume, ACSOS-C.</p>
+	</SecondaryBanner>
+
+	<div id="main">
+		<!-- ACSOS Proceedings Section -->
+		<section>
+			<div class="inner">
+
+				<div class="table-wrapper">
+					<table>
+						<thead>
+							<tr>
+								<th>ACSOS Proceedings</th>
+								<th>ACSOS-C Proceedings</th>
+							</tr>
+						</thead>
+						<tbody>
+							{acsosProceedings.map((proc) => (
+								<tr>
+									<td>
+										{proc.main ? (
+											<a href={proc.main} target="_blank" rel="noopener noreferrer">ACSOS {proc.year}</a>
+										) : (
+											`ACSOS ${proc.year}`
+										)}
+									</td>
+									<td>
+										{proc.companion ? (
+											<a href={proc.companion} target="_blank" rel="noopener noreferrer">ACSOS-C {proc.year}</a>
+										) : (
+											<span style="color: #888; font-style: italic;">Soon online</span>
+										)}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<!-- Pre-Merger Proceedings Section -->
+		<section style="background-color: rgba(0,0,0,0.025);">
+			<div class="inner">
+				<header class="major">
+					<h2>ICAC and SASO Conference Proceedings (Pre-Merger)</h2>
+				</header>
+				<p style="margin-bottom: 2em;">
+					Before the 2020 merger, ICAC and SASO published separate proceedings. The companion proceedings included workshops under various names:
+					<b>FAS*W</b> (Feedback, Adaptation, and Self-managing Systems Workshops), 
+					<b>SASOW</b> (SASO Workshops), and 
+					<b>ICCAC/CAC</b> (Companion to Autonomic Computing).
+				</p>
+				
+				<div class="table-wrapper">
+					<table>
+						<thead>
+							<tr>
+								<th>ICAC Proceedings</th>
+								<th>(IC)CAC Proceedings</th>
+								<th>SASO Proceedings</th>
+								<th>FAS*W Proceedings</th>
+							</tr>
+						</thead>
+						<tbody>
+							{preMergerProceedings.map((proc) => (
+								<tr>
+									{/* ICAC */}
+									<td>
+										{proc.icac ? (
+											<a href={proc.icac} target="_blank" rel="noopener noreferrer">ICAC {proc.year}</a>
+										) : ''}
+									</td>
+									
+									{/* ICCAC/CAC */}
+									<td>
+										{proc.iccac ? (
+											<a href={proc.iccac} target="_blank" rel="noopener noreferrer">ICCAC {proc.year}</a>
+										) : proc.cac ? (
+											<a href={proc.cac} target="_blank" rel="noopener noreferrer">CAC {proc.year}</a>
+										) : ''}
+									</td>
+									
+									{/* SASO */}
+									<td>
+										{proc.saso ? (
+											<a href={proc.saso} target="_blank" rel="noopener noreferrer">SASO {proc.year}</a>
+										) : ''}
+									</td>
+									
+									{/* FAS*W/SASOW */}
+									<td>
+										{proc.fasw ? (
+											<a href={proc.fasw} target="_blank" rel="noopener noreferrer">
+												{proc.year >= 2016 ? 'FAS*W' : proc.year >= 2010 ? 'SASOW' : 'SAOW'} {proc.year}
+											</a>
+										) : ''}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</div>
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+interface TileItem {
+	image: string;
+	title: string;
+	description: string;
+	link: string;
+	external?: boolean;
+}
+
+interface Props {
+	tiles: TileItem[];
+}
+
+const { tiles } = Astro.props;
+---
+
+<section id="one" class="tiles">
+	{tiles.map((tile) => (
+		<article>
+			<span class="image">
+				<img src={tile.image} alt="" />
+			</span>
+			<header class="major">
+				<h3>
+					<a 
+						href={tile.link} 
+						class="link"
+						target={tile.external ? "_blank" : undefined}
+					>
+						{tile.title}
+					</a>
+				</h3>
+				<p>{tile.description}</p>
+			</header>
+		</article>
+	))}
+</section>

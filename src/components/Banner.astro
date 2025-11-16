@@ -1,0 +1,44 @@
+---
+interface Props {
+	title: string;
+	subtitle?: string;
+	styleClass?: string;
+	showSocialLinks?: boolean;
+}
+
+const { title, subtitle, styleClass = '', showSocialLinks = false } = Astro.props;
+---
+
+<section id="banner" class:list={['major', styleClass]}>
+	<div class="inner">
+		<header class="major">
+			<h1>{title}</h1>
+		</header>
+		{subtitle && <p>{subtitle}</p>}
+		<div class="content">
+			{showSocialLinks && (
+				<ul class="actions">
+					<li>
+						<a href="https://github.com/acsos" class="icon brands alt fa-github">
+							<span class="label">GitHub</span>
+						</a>
+					</li>
+					<li>
+						<a href="https://www.linkedin.com/company/acsos/" class="icon brands alt fa-linkedin-in">
+							<span class="label">LinkedIn</span>
+						</a>
+					</li>
+					<li>
+						<a href="https://fediscience.org/@ACSOSconf" class="icon brands alt fa-mastodon">
+							<span class="label">Mastodon</span>
+						</a>
+					</li>
+					<li>
+						<a href="#one" class="button next scrolly">Learn more</a>
+					</li>
+				</ul>
+			)}
+			<slot />
+		</div>
+	</div>
+</section>

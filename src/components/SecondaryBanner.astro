@@ -1,0 +1,17 @@
+---
+interface Props {
+	title: string;
+	styleClass?: string;
+}
+
+const { title, styleClass = 'alt style2' } = Astro.props;
+---
+
+<section id="banner" class={styleClass}>
+	<div class="inner">
+		<header class="major">
+			<h1>{title}</h1>
+		</header>
+		<slot />
+	</div>
+</section>
