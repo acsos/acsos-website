@@ -1768,6 +1768,7 @@ input, select, textarea {
 	section.special, article.special {
 		text-align: center;
 	}
+	
 
 	header.major {
 		width: -moz-max-content;
@@ -1811,6 +1812,10 @@ input, select, textarea {
 
 		header.major > p br {
 			display: none;
+		}
+		
+		header.major {
+		width: fit-content;
 		}
 
 	}
@@ -3010,54 +3015,64 @@ input, select, textarea {
 					align-items: flex-end;
 				}
 
-		@media screen and (max-width: 1680px) {
+/* Large screens */
+@media screen and (max-width: 1680px) {
+  .spotlights > section > .image { width: 40%; }
+  .spotlights > section > .content { width: 60%; }
+}
 
-			.spotlights > section > .image {
-				width: 40%;
-			}
+/* Medium screens */
+@media screen and (max-width: 1280px) {
+  .spotlights > section > .image { width: 45%; }
+  .spotlights > section > .content { width: 55%; }
 
-			.spotlights > section > .content {
-				width: 60%;
-			}
+  .spotlights .major h4,
+  .spotlights .major h4 a {
+    font-size: 0.9rem;
+  }
+}
 
-		}
+/* Medium-small screens: 500px - 980px */
+@media screen and (min-width: 500px) and (max-width: 980px) {
+  .spotlights > section > .image img {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    object-fit: contain;
+    margin-bottom: 1em;
+  }
+}
 
-		@media screen and (max-width: 1280px) {
+/* Tablets / small screens */
+@media screen and (max-width: 980px) {
+  .spotlights > section { display: block; }
+  .spotlights > section > .image { width: 100%; }
+  .spotlights > section > .content {
+    padding: 4em 3em 2em 3em;
+    width: 100%;
+  }
+}
 
-			.spotlights > section > .image {
-				width: 45%;
-			}
+/* Mobile screens */
+@media screen and (max-width: 736px) {
+  .spotlights > section > .content {
+    padding: 3em 1.5em 1em 1.5em;
+  }
+  
+  .spotlights .major h4,
+  .spotlights .major h4 a {
+    font-size: 0.85rem;
+  }
 
-			.spotlights > section > .content {
-				width: 55%;
-			}
+  
+}
 
-		}
 
-		@media screen and (max-width: 980px) {
 
-			.spotlights > section {
-				display: block;
-			}
 
-				.spotlights > section > .image {
-					width: 100%;
-				}
 
-				.spotlights > section > .content {
-					padding: 4em 3em 2em 3em ;
-					width: 100%;
-				}
 
-		}
 
-		@media screen and (max-width: 736px) {
-
-			.spotlights > section > .content {
-				padding: 3em 1.5em 1em 1.5em ;
-			}
-
-		}
 
 /* Header */
 
@@ -3347,7 +3362,7 @@ input, select, textarea {
 
 		}
 
-		@media screen and (max-width: 480px) {
+		@media screen and (max-width: 710px) {
 
 			#header .logo span {
 				display: none;
@@ -3370,6 +3385,15 @@ input, select, textarea {
 					width: 4em;
 					right: 0;
 				}
+
+		}
+		/* Full title drops to next line otherwise */
+		@media screen and (max-width: 718px) {
+
+			#header .logo span {
+				font-size: 1em;
+			}
+
 
 		}
 
