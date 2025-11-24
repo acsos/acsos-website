@@ -2,7 +2,8 @@
 year: 2023
 category: "karsten-schwan"
 title: "μOpt: An Efficient Optimal Autoscaler for Microservice Applications"
-image: "/images/conf/Karsten/2023_karsten.jpg"
+image: "/images/conf/Karsten/2023.jpg"
+paperUrl: "https://ieeexplore.ieee.org/document/10336041"
 conference: "ACSOS"
 authors:
   - name: "Emilio Incerto"

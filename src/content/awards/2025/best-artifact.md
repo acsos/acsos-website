@@ -2,7 +2,8 @@
 year: 2025
 category: "best-artifact"
 title: "Comprehensible Self-aware Behavioral Programming"
-image: "/images/conf/Artifact/2025_arti.jpg"
+image: "/images/conf/Artifact/2025.jpg"
+paperUrl: "https://ieeexplore.ieee.org/document/11217465"
 conference: "ACSOS"
 authors:
   - name: "Tom Felber"

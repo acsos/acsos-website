@@ -3,7 +3,7 @@ year: 2025
 category: "best-student"
 title: "A Field-based Approach for Runtime Replanning in Swarm Robotics Missions"
 paperUrl: "https://ieeexplore.ieee.org/document/11217849"
-image: "/images/conf/Student/2025_stu.jpg"
+image: "/images/conf/Student/2025.jpeg"
 conference: "ACSOS"
 authors:
   - name: "Gianluca Aguzzi"

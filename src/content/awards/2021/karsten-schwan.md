@@ -3,6 +3,7 @@ year: 2021
 category: "karsten-schwan"
 title: "Swarmalators with Stochastic Coupling and Memory"
 conference: "ACSOS"
+paperUrl: "https://ieeexplore.ieee.org/document/9659518"
 authors:
   - name: "Udo Schilcher"
     affiliation: "Institute of Networked and Embedded Systems, University of Klagenfurt"
