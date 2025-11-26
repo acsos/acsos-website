@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SecondaryBanner from '../components/SecondaryBanner.astro';
+import { getCollection } from 'astro:content';
+
+// Get all conferences and sort by year (newest first)
+const allConferences = (await getCollection('conferences'))
+	.sort((a, b) => b.data.year - a.data.year);
+
+// Group by series
+const acsos = allConferences.filter(conf => conf.data.series === 'ACSOS');
+const icac = allConferences.filter(conf => conf.data.series === 'ICAC');
+const saso = allConferences.filter(conf => conf.data.series === 'SASO');
+---
+
+<BaseLayout 
+	title="ACSOS Conference Series" 
+	currentPage="series"
+	description="The history of ACSOS conferences"
+	headerStyle="alt style2"
+>
+	<!-- Banner -->
+	<SecondaryBanner title="Previous Conferences">
+		<p>
+			The ACSOS conference was founded in 2020 as a merger of the IEEE International Conference 
+			on Autonomic Computing (ICAC) and the IEEE International Conference on Self-Adaptive and 
+			Self-Organizing Systems (SASO).
+		</p>
+	</SecondaryBanner>
+
+	<!-- Main Content -->
+	<div id="main">
+		<section>
+			<div class="inner">
+				<!-- ACSOS Conferences -->
+				<h2>ACSOS Conferences (2020-Present)</h2>
+				<div class="table-wrapper">
+					<table>
+						<thead>
+							<tr>
+								<th>Conference</th>
+								<th>Location</th>
+								<th>Acceptance Rate</th>
+							</tr>
+						</thead>
+						<tbody>
+							{acsos.map((conf) => (
+								<>
+									<tr>
+										<td>
+											The {conf.data.edition}{conf.data.edition === 1 ? 'st' : conf.data.edition === 2 ? 'nd' : conf.data.edition === 3 ? 'rd' : 'th'} ACSOS conference (
+											{conf.data.website ? (
+												<a href={conf.data.website} target="_blank">{conf.data.name}</a>
+											) : (
+												<a href={`/conferences/${conf.data.year}`}>{conf.data.name}</a>
+											)}
+											)
+										</td>
+										<td>{conf.data.location}</td>
+										<td>{conf.data.acceptanceRate || ''}</td>
+									</tr>
+									<tr>
+										<td colspan="3" id="series-chair-formatting">
+											<b>General Chairs:</b>
+											<ul>
+												{conf.data.generalChairs.map((chair) => (
+													<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+												))}
+											</ul>
+											{conf.data.programChairs && conf.data.programChairs.length > 0 && (
+												<>
+													<b>Program Chairs:</b>
+													<ul>
+														{conf.data.programChairs.map((chair) => (
+															<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+														))}
+													</ul>
+												</>
+											)}
+										</td>
+									</tr>
+								</>
+							))}
+						</tbody>
+					</table>
+				</div>
+
+				{/* Two-column layout for ICAC and SASO side-by-side */}
+				{icac.length > 0 && saso.length > 0 && (
+					<>
+						<h2 style="margin-top: 3em;">ICAC and SASO Conferences (Pre-Merger)</h2>
+						<div class="table-wrapper">
+							<table>
+								<thead>
+									<tr>
+										<th>Conference</th>
+										<th>Location</th>
+										<th>Acceptance Rate</th>
+										<th>Conference</th>
+										<th>Location</th>
+										<th>Acceptance Rate</th>
+									</tr>
+								</thead>
+								<tbody>
+									{icac.map((icacConf, index) => {
+										const sasoConf = saso.find(s => s.data.year === icacConf.data.year);
+										return (
+											<>
+												<tr>
+													{/* ICAC Column */}
+													<td>
+														{icacConf.data.website ? (
+															<a href={icacConf.data.website} target="_blank">{icacConf.data.name}</a>
+														) : (
+															<a href={`/conferences/${icacConf.data.year}`}>{icacConf.data.name}</a>
+														)}
+													</td>
+													<td>{icacConf.data.location}</td>
+													<td>{icacConf.data.acceptanceRate || ''}</td>
+													
+													{/* SASO Column */}
+													{sasoConf ? (
+														<>
+															<td>
+																{sasoConf.data.website ? (
+																	<a href={sasoConf.data.website} target="_blank">{sasoConf.data.name}</a>
+																) : (
+																	<a href={`/conferences/${sasoConf.data.year}`}>{sasoConf.data.name}</a>
+																)}
+															</td>
+															<td>{sasoConf.data.location}</td>
+															<td>{sasoConf.data.acceptanceRate || ''}</td>
+														</>
+													) : (
+														<>
+															<td></td>
+															<td></td>
+															<td></td>
+														</>
+													)}
+												</tr>
+												<tr>
+													{/* ICAC Chairs */}
+													<td colspan="3" id="series-chair-formatting">
+														<b>General Chairs:</b>
+														<ul>
+															{icacConf.data.generalChairs.map((chair) => (
+																<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+															))}
+														</ul>
+														{icacConf.data.programChairs && icacConf.data.programChairs.length > 0 && (
+															<>
+																<b>Program Chairs:</b>
+																<ul>
+																	{icacConf.data.programChairs.map((chair) => (
+																		<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+																	))}
+																</ul>
+															</>
+														)}
+													</td>
+													
+													{/* SASO Chairs */}
+													{sasoConf ? (
+														<td colspan="3" id="series-chair-formatting">
+															<b>General Chairs:</b>
+															<ul>
+																{sasoConf.data.generalChairs.map((chair) => (
+																	<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+																))}
+															</ul>
+															{sasoConf.data.programChairs && sasoConf.data.programChairs.length > 0 && (
+																<>
+																	<b>Program Chairs:</b>
+																	<ul>
+																		{sasoConf.data.programChairs.map((chair) => (
+																			<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+																		))}
+																	</ul>
+																</>
+															)}
+														</td>
+													) : (
+														<td colspan="3"></td>
+													)}
+												</tr>
+											</>
+										);
+									})}
+								</tbody>
+							</table>
+						</div>
+					</>
+				)}
+
+			</div>
+		</section>
+	</div>
+</BaseLayout>
