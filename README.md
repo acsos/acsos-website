@@ -12,7 +12,9 @@ This repository contains the code for the ACSOS (Autonomic Computing and Self-Or
 │   ├── components/ # Reusable components, e.g., Banner, Tiles
 │   ├── layouts/ # Layouts of common structure, e.g., BaseLayout
 │   └── pages/ # Site pages, e.g., index.astro, series.astro
-└── package.json
+├── package.json
+├── package-lock.json # locks dependency versions
+└── astro.config.mjs # Provides netlify support
 ```
 
 ## 🧞 Commands
