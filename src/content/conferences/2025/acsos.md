@@ -14,10 +14,10 @@ generalChairs:
     affiliation: "University of Modena and Reggio Emilia"
     country: "Italy"
 programChairs:
-  - name: "Payam Zahadat"
-    affiliation: "IT University of Copenhagen"
-    country: "Denmark"
-  - name: "Christian Becker"
-    affiliation: "University of Stuttgart"
-    country: "Germany"
+  - name: "Phyllis Nelson"
+    affiliation: "California State Polytechnic University Pomona"
+    country: "United States"
+  - name: "K R Jayaram"
+    affiliation: "IBM Research"
+    country: "United States"
 ---
