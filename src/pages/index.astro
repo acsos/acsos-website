@@ -2,6 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Banner from '../components/Banner.astro';
 import Tiles from '../components/Tiles.astro';
+import { getCollection } from 'astro:content';
+
+const newsletters = (await getCollection('newsletters'))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, 3);
 
 const tiles = [
 	{
@@ -104,6 +109,37 @@ const tiles = [
 					and report state-of-the-art and in-progress research in all areas related to autonomic computing, 
 					self-adaptation and self-organization.
 				</p>
+			</div>
+		</section>
+
+		<!-- Newsletters Section -->
+		<section id="news-main">
+			<div class="inner">
+				<header class="major">
+					<h2>Recent News</h2>
+				</header>
+				<div class="row gtr-uniform">
+					{newsletters.map((newsletter) => (
+						<div class="col-4 col-12-medium">
+							<div style="height: 100%; display: flex; flex-direction: column;">
+								<span class="image fit">
+									<img src={newsletter.data.image || '/images/design/pic06.jpg'} alt="" style="height: 250px; object-fit: cover;" />
+								</span>
+								<h3>{newsletter.data.title}</h3>
+								<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
+									{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+								</p>
+								<p style="flex-grow: 1;">{newsletter.data.description}</p>
+								<ul class="actions">
+									<li><a href={`/newsletters/${newsletter.slug}`} class="button">Read More</a></li>
+								</ul>
+							</div>
+						</div>
+					))}
+				</div>
+				<ul class="actions" style="margin-top: 2em;">
+					<li><a href="/newsletters" class="button primary">View All News</a></li>
+				</ul>
 			</div>
 		</section>
 	</div>

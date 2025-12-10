@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecondaryBanner from '../../components/SecondaryBanner.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths({ paginate }) {
+  const newsletters = (await getCollection('newsletters'))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return paginate(newsletters, { pageSize: 10 });
+}
+
+const { page } = Astro.props;
+
+// Get all newsletters for client-side search
+const allNewsletters = (await getCollection('newsletters'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map(n => ({
+    title: n.data.title,
+    description: n.data.description,
+    date: n.data.date.toISOString(),
+    slug: n.slug,
+    image: n.data.image || '/images/design/pic06.jpg'
+  }));
+---
+
+<BaseLayout 
+	title={`ACSOS Newsletters - Page ${page.currentPage}`}
+	description="Latest news and updates from ACSOS"
+	headerStyle="alt style2"
+>
+	<SecondaryBanner title="Newsletters">
+		<p>Latest news and updates from the ACSOS community</p>
+	</SecondaryBanner>
+
+	<div id="main">
+		<section>
+			<div class="inner">
+				<div style="margin-bottom: 3em; position: relative; width: 100%;">
+					<span class="icon solid fa-search" style="position: absolute; left: 1.5em; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.5); pointer-events: none; z-index: 1;"></span>
+					<input type="text" id="search" placeholder="Search newsletters..." style="padding-left: 3.5em; border-radius: 50px; background-color: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);" />
+				</div>
+				
+				<!-- Static List (Server Rendered) -->
+				<div id="static-list">
+					<div id="newsletter-list">
+						{page.data.map((newsletter) => (
+							<article class="newsletter-item" style="margin-bottom: 3em; border-bottom: 1px solid #eee; padding-bottom: 2em;">
+								<div class="row">
+									<div class="col-4 col-12-medium">
+										<span class="image fit">
+											<img src={newsletter.data.image || '/images/design/pic06.jpg'} alt="" />
+										</span>
+									</div>
+									<div class="col-8 col-12-medium">
+										<header>
+											<h3><a href={`/newsletters/${newsletter.slug}`}>{newsletter.data.title}</a></h3>
+											<p style="font-style: italic; color: #666;">
+												{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+											</p>
+										</header>
+										<p class="description">{newsletter.data.description}</p>
+										<ul class="actions">
+											<li><a href={`/newsletters/${newsletter.slug}`} class="button">Read More</a></li>
+										</ul>
+									</div>
+								</div>
+							</article>
+						))}
+					</div>
+
+					<!-- Pagination -->
+					<div class="pagination" style="display: flex; justify-content: center; gap: 1em; margin-top: 2em;">
+						{page.url.prev ? <a href={page.url.prev} class="button">Previous</a> : <span class="button disabled">Previous</span>}
+						<span style="align-self: center;">Page {page.currentPage} of {page.lastPage}</span>
+						{page.url.next ? <a href={page.url.next} class="button">Next</a> : <span class="button disabled">Next</span>}
+					</div>
+				</div>
+
+				<!-- Dynamic List (Client Rendered) -->
+				<div id="dynamic-list" style="display: none;">
+					<div id="dynamic-newsletter-list"></div>
+					<div id="dynamic-pagination" class="pagination" style="display: flex; justify-content: center; gap: 1em; margin-top: 2em;"></div>
+				</div>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<script define:vars={{ allNewsletters }}>
+	const searchInput = document.getElementById('search');
+	const staticList = document.getElementById('static-list');
+	const dynamicList = document.getElementById('dynamic-list');
+	const dynamicNewsletterList = document.getElementById('dynamic-newsletter-list');
+	const dynamicPagination = document.getElementById('dynamic-pagination');
+
+	let currentPage = 1;
+	const pageSize = 10;
+	let filteredNewsletters = [...allNewsletters];
+
+	function formatDate(dateString) {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+	}
+
+	function renderNewsletters() {
+		if (!dynamicNewsletterList || !dynamicPagination) return;
+
+		const start = (currentPage - 1) * pageSize;
+		const end = start + pageSize;
+		const pageItems = filteredNewsletters.slice(start, end);
+		const totalPages = Math.ceil(filteredNewsletters.length / pageSize);
+
+		// Render Items
+		dynamicNewsletterList.innerHTML = pageItems.map(newsletter => `
+			<article class="newsletter-item" style="margin-bottom: 3em; border-bottom: 1px solid #eee; padding-bottom: 2em;">
+				<div class="row">
+					<div class="col-4 col-12-medium">
+						<span class="image fit">
+							<img src="${newsletter.image}" alt="" />
+						</span>
+					</div>
+					<div class="col-8 col-12-medium">
+						<header>
+							<h3><a href="/newsletters/${newsletter.slug}">${newsletter.title}</a></h3>
+							<p style="font-style: italic; color: #666;">
+								${formatDate(newsletter.date)}
+							</p>
+						</header>
+						<p class="description">${newsletter.description}</p>
+						<ul class="actions">
+							<li><a href="/newsletters/${newsletter.slug}" class="button">Read More</a></li>
+						</ul>
+					</div>
+				</div>
+			</article>
+		`).join('');
+
+		if (pageItems.length === 0) {
+			dynamicNewsletterList.innerHTML = '<p>No newsletters found.</p>';
+		}
+
+		// Render Pagination
+		if (totalPages > 1) {
+			dynamicPagination.innerHTML = `
+				<button class="button ${currentPage === 1 ? 'disabled' : ''}" onclick="window.changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+				<span style="align-self: center;">Page ${currentPage} of ${totalPages}</span>
+				<button class="button ${currentPage === totalPages ? 'disabled' : ''}" onclick="window.changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+			`;
+			dynamicPagination.style.display = 'flex';
+		} else {
+			dynamicPagination.style.display = 'none';
+		}
+	}
+
+	// Expose changePage to global scope for inline onclick handlers
+	window.changePage = (newPage) => {
+		currentPage = newPage;
+		renderNewsletters();
+		// Scroll to top of list
+		const main = document.getElementById('main');
+		if (main) main.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	if (searchInput) {
+		searchInput.addEventListener('input', (e) => {
+			const term = e.target.value.toLowerCase();
+
+			if (term.trim() === '') {
+				staticList.style.display = 'block';
+				dynamicList.style.display = 'none';
+			} else {
+				staticList.style.display = 'none';
+				dynamicList.style.display = 'block';
+
+				filteredNewsletters = allNewsletters.filter(n => 
+					n.title.toLowerCase().includes(term) || 
+					n.description.toLowerCase().includes(term)
+				);
+				currentPage = 1;
+				renderNewsletters();
+			}
+		});
+	}
+</script>

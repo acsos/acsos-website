@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecondaryBanner from '../../components/SecondaryBanner.astro';
+
+export async function getStaticPaths() {
+  const newsletters = await getCollection('newsletters');
+  return newsletters.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title} headerStyle="alt style2">
+	<SecondaryBanner title={entry.data.title}>
+        <p>{entry.data.description}</p>
+        <p style="font-size: 0.8em; opacity: 0.8;">{entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    </SecondaryBanner>
+	<div id="main">
+		<section>
+			<div class="inner">
+				<Content />
+                <hr />
+                <a href="/newsletters" class="button">Back to Newsletters</a>
+			</div>
+		</section>
+	</div>
+</BaseLayout>

@@ -59,8 +59,19 @@ const leadership = defineCollection({
   }),
 });
 
+const newsletters = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    image: z.string().optional(),
+  }),
+});
+
 export const collections = {
   conferences,
   awards,
   leadership,
+  newsletters,
 };
