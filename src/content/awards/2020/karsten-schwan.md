@@ -3,6 +3,7 @@ year: 2020
 category: "karsten-schwan"
 title: "Reconfigurable Embedded Devices Using Reinforcement Learning to Develop Action-Policies"
 conference: "ACSOS"
+paperUrl: "https://ieeexplore.ieee.org/document/9196411"
 authors:
   - name: "Alwyn Burger"
     affiliation: "Embedded Systems Group University of Duisburg-Essen Duisburg"

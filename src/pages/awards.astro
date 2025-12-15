@@ -5,215 +5,272 @@ import { getCollection } from 'astro:content';
 
 // Get all awards and sort by year (newest first)
 const allAwards = (await getCollection('awards'))
-	.sort((a, b) => b.data.year - a.data.year);
+  .sort((a, b) => b.data.year - a.data.year);
 
 // Group by category
-const karstenAwards = allAwards.filter(award => award.data.category === 'karsten-schwan');
-const studentAwards = allAwards.filter(award => award.data.category === 'best-student');
-const posterDemoAwards = allAwards.filter(award => award.data.category === 'best-poster-demo');
-const artifactAwards = allAwards.filter(award => award.data.category === 'best-artifact');
+const karstenAwards = allAwards.filter(a => a.data.category === 'karsten-schwan');
+const studentAwards = allAwards.filter(a => a.data.category === 'best-student');
+const posterDemoAwards = allAwards.filter(a => a.data.category === 'best-poster-demo');
+const artifactAwards = allAwards.filter(a => a.data.category === 'best-artifact');
 ---
 
 <BaseLayout 
-	title="ACSOS Conference Awards" 
-	currentPage="awards"
-	headerStyle="alt style4"
+  title="ACSOS Conference Awards" 
+  currentPage="awards"
+  headerStyle="alt style4"
 >
-	<SecondaryBanner 
-		title="Conference Awards"
-		styleClass="alt style4"
-	>
-		<p>The ACSOS Conference presents several awards. Below are the recipients for the following categories:</p>
-	</SecondaryBanner>
+  <SecondaryBanner 
+    title="Conference Awards"
+    styleClass="alt style4"
+  >
+    <p>The ACSOS Conference presents several awards. Below are the recipients for the following categories:</p>
+  </SecondaryBanner>
 
-	<!-- Award Category Buttons -->
-	<section id="one">
-		<div class="inner" id="award-buttons">
-			<a href="#Karsten-Schwan" class="button primary fit small">Karsten Schwan Best Paper Award</a>
-			<a href="#Best-stu" class="button primary fit small">Best Student Paper Award</a>
-			<a href="#Best-pd" class="button primary fit small">Best Poster/Demo Award</a>
-			<a href="#Best-art" class="button primary fit small">Best Artifact Award</a>
-		</div>
-	</section>
+  <!-- Award Category Buttons -->
+  <section id="one">
+    <div class="inner" id="award-buttons">
+      <a href="#Karsten-Schwan" class="button primary fit small">Karsten Schwan Best Paper Award</a>
+      <a href="#Best-stu" class="button primary fit small">Best Student Paper Award</a>
+      <a href="#Best-pd" class="button primary fit small">Best Poster/Demo Award</a>
+      <a href="#Best-art" class="button primary fit small">Best Artifact Award</a>
+    </div>
+  </section>
 
-	<!-- Karsten Schwan Award Section -->
-	<section id="" class="style2">
-		<div class="inner">
-			<header id="Karsten-Schwan" class="major">
-				<h3>Karsten Schwan Best Paper Award</h3>
-			</header>
-			<div class="content">
-				<p>Since 2016, the autonomic computing community has named its best paper award after Karsten Schwan, a computing pioneer who spearheaded research on distributed computing, 
-					high performance computing (see <a href="http://www.hpdc.org/2019/awards/best-paper-award/">HPDC</a>), autonomic computing (see <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7573105">ACSOS</a>), 
-					as well as translation research that impacted industry. He was also a staunch supporter of broadening participation and access to computing. This tradition began at ICAC 
-					and continues at ACSOS. Below is a list of the winners of the Karsten Schwan Award for Best Paper.</p>
-			</div>
-		</div>
-	</section>
+  <!-- ---------------------------
+       KARSTEN SCHWAN AWARD
+  ---------------------------- -->
+  <section class="style2">
+    <div class="inner">
+      <header id="Karsten-Schwan" class="major">
+        <h3>Karsten Schwan Best Paper Award</h3>
+      </header>
+      <div class="content">
+        <p>Since 2016, the autonomic computing community has named its best paper award after Karsten Schwan, a computing pioneer who spearheaded research on distributed computing, high performance computing (see <a href="http://www.hpdc.org/2019/awards/best-paper-award/">HPDC</a>), autonomic computing (see <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7573105">ACSOS</a>), as well as translation research that impacted industry. He was also a staunch supporter of broadening participation and access to computing. This tradition began at ICAC and continues at ACSOS. Below is a list of the winners of the Karsten Schwan Award for Best Paper.</p>
+      </div>
+    </div>
+  </section>
 
-	<!-- Karsten Schwan Winners -->
-	<section id="two" class="spotlights">
-		{karstenAwards.map(async (award) => {
-			const { Content } = await award.render();
-			return (
-				<section>
-					<a href={award.data.paperUrl || "#"} class="image">
-						<img src={award.data.image || "/images/design/pic10.jpg"} alt="" data-position="center center" />
-					</a>
-					<div class="content">
-						<div class="inner">
-							<header class="major">
-								<h4><a href={award.data.paperUrl || "#"}>{award.data.title}</a></h4>
-							</header>
-							<p>
-								{award.data.conference} {award.data.year} Winners: {award.data.authors.map((author, idx) => (
-									<>
-										<b>{author.name}</b>{author.affiliation ? `, ${author.affiliation}` : ''}{idx < award.data.authors.length - 1 ? ', ' : ''}
-									</>
-								))}
-							</p>
-							{award.data.paperUrl && (
-								<ul class="actions">
-									<a href={award.data.paperUrl} class="button">The Paper</a>
-								</ul>
-							)}
-						</div>
-					</div>
-				</section>
-			);
-		})}
-	</section>
+  {karstenAwards.length > 0 && (
+    <section id="two" class="spotlights">
+      {karstenAwards.map(async (award) => {
+        const { Content } = await award.render();
+        const hasImage = !!award.data.image;
 
-	<!-- Student Award Section -->
-	<section id="" class="style2">
-		<div class="inner">
-			<header id="Best-stu" class="major">
-				<h3>Best Student Paper Award</h3>
-			</header>
-			<div class="content">
-				<p>Recognizing outstanding research contributions by student authors.</p>
-			</div>
-		</div>
-	</section>
+        return (
+          <section class={hasImage ? "" : "no-image"}>
+            {hasImage && (
+              <a href={award.data.paperUrl || "#"} class="image">
+                <img src={award.data.image} alt={award.data.title} />
+              </a>
+            )}
 
-	<!-- Student Award Winners -->
-	{studentAwards.length > 0 && (
-		<section id="two" class="spotlights">
-			{studentAwards.map(async (award) => {
-				const { Content } = await award.render();
-				return (
-					<section>
-						<a href={award.data.paperUrl || "#"} class="image">
-							<img src={award.data.image || "/images/design/pic10.jpg"} alt="" data-position="25% 25%" />
-						</a>
-						<div class="content">
-							<div class="inner">
-								<header class="major">
-									<h4>{award.data.paperUrl ? <a href={award.data.paperUrl}>{award.data.title}</a> : award.data.title}</h4>
-								</header>
-								<p>
-									{award.data.conference} {award.data.year} Winners: {award.data.authors.map((author, idx) => (
-										<>
-											<b>{author.name}</b>{author.affiliation ? `, ${author.affiliation}` : ''}{idx < award.data.authors.length - 1 ? ', ' : ''}
-										</>
-									))}
-								</p>
-								{award.data.paperUrl && (
-									<ul class="actions">
-										<a href={award.data.paperUrl} class="button">The Paper</a>
-									</ul>
-								)}
-							</div>
-						</div>
-					</section>
-				);
-			})}
-		</section>
-	)}
+            <div class="content">
+              <div class="inner">
+                <header class="major">
+                  <h4>
+                    {award.data.paperUrl
+                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
+                      : award.data.title}
+                  </h4>
+                </header>
 
-	<!-- Poster/Demo Award Section -->
-	<section id="" class="style2">
-		<div class="inner">
-			<header id="Best-pd" class="major">
-				<h3>Best Poster/Demo Award</h3>
-			</header>
-			<div class="content">
-				<p>Recognizing outstanding poster and demonstration contributions.</p>
-			</div>
-		</div>
-	</section>
+                <p>
+                  {award.data.conference} {award.data.year} Winners:{' '}
+                  {award.data.authors.map((author, idx) => (
+                    <>
+                      <b>{author.name}</b>
+                      {author.affiliation ? `, ${author.affiliation}` : ''}
+                      {idx < award.data.authors.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
 
-	{posterDemoAwards.length > 0 && (
-		<section id="two" class="spotlights">
-			{posterDemoAwards.map(async (award) => {
-				return (
-					<section>
-						<a href={award.data.paperUrl || "#"} class="image">
-							<img src={award.data.image || "/images/design/pic10.jpg"} alt="" data-position="25% 25%" />
-						</a>
-						<div class="content">
-							<div class="inner">
-								<header class="major">
-									<h4>{award.data.paperUrl ? <a href={award.data.paperUrl}>{award.data.title}</a> : award.data.title}</h4>
-								</header>
-								<p>
-									{award.data.conference} {award.data.year} Winners: {award.data.authors.map((author, idx) => (
-										<>
-											<b>{author.name}</b>{author.affiliation ? `, ${author.affiliation}` : ''}{idx < award.data.authors.length - 1 ? ', ' : ''}
-										</>
-									))}
-								</p>
-								{award.data.paperUrl && (
-									<a href={award.data.paperUrl} class="button">The Paper</a>
-								)}
-							</div>
-						</div>
-					</section>
-				);
-			})}
-		</section>
-	)}
+                {award.data.paperUrl && (
+                  <a href={award.data.paperUrl} class="button">The Paper</a>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </section>
+  )}
 
-	<!-- Artifact Award Section -->
-	<section id="" class="style2">
-		<div class="inner">
-			<header id="Best-art" class="major">
-				<h3>Best Artifact Award</h3>
-			</header>
-			<div class="content">
-				<p>Recognizing excellence in research artifact development and sharing.</p>
-			</div>
-		</div>
-	</section>
+  <!-- ---------------------------
+       STUDENT AWARD
+  ---------------------------- -->
+  <section class="style2">
+    <div class="inner">
+      <header id="Best-stu" class="major">
+        <h3>Best Student Paper Award</h3>
+      </header>
+      <div class="content">
+        <p>The Best Student Paper Award was first introduced at the 4th IEEE International Conference on Autonomic Computing and Self-Organizing Systems (ACSOS) in 2023, recognizing exceptional research contributions led by student authors and highlighting emerging talent in the field.</p>
+      </div>
+    </div>
+  </section>
 
-	{artifactAwards.length > 0 && (
-		<section id="two" class="spotlights">
-			{artifactAwards.map(async (award) => {
-				return (
-					<section>
-						<a href={award.data.paperUrl || "#"} class="image">
-							<img src={award.data.image || "/images/design/pic10.jpg"} alt="" data-position="25% 25%" />
-						</a>
-						<div class="content">
-							<div class="inner">
-								<header class="major">
-									<h4>{award.data.paperUrl ? <a href={award.data.paperUrl}>{award.data.title}</a> : award.data.title}</h4>
-								</header>
-								<p>
-									{award.data.conference} {award.data.year} Winners: {award.data.authors.map((author, idx) => (
-										<>
-											<b>{author.name}</b>{author.affiliation ? `, ${author.affiliation}` : ''}{idx < award.data.authors.length - 1 ? ', ' : ''}
-										</>
-									))}
-								</p>
-								{award.data.paperUrl && (
-									<a href={award.data.paperUrl} class="button">The Paper</a>
-								)}
-							</div>
-						</div>
-					</section>
-				);
-			})}
-		</section>
-	)}
+  {studentAwards.length > 0 && (
+    <section id="two" class="spotlights">
+      {studentAwards.map(async (award) => {
+        const hasImage = !!award.data.image;
+
+        return (
+          <section class={hasImage ? "" : "no-image"}>
+            {hasImage && (
+              <a href={award.data.paperUrl || "#"} class="image">
+                <img src={award.data.image} alt={award.data.title} />
+              </a>
+            )}
+
+            <div class="content">
+              <div class="inner">
+                <header class="major">
+                  <h4>
+                    {award.data.paperUrl
+                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
+                      : award.data.title}
+                  </h4>
+                </header>
+
+                <p>
+                  {award.data.conference} {award.data.year} Winners:{' '}
+                  {award.data.authors.map((author, idx) => (
+                    <>
+                      <b>{author.name}</b>
+                      {author.affiliation ? `, ${author.affiliation}` : ''}
+                      {idx < award.data.authors.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+
+                {award.data.paperUrl && (
+                  <a href={award.data.paperUrl} class="button">The Paper</a>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </section>
+  )}
+
+  <!-- ---------------------------
+       POSTER/DEMO AWARD
+  ---------------------------- -->
+  <section class="style2">
+    <div class="inner">
+      <header id="Best-pd" class="major">
+        <h3>Best Poster/Demo Award</h3>
+      </header>
+      <div class="content">
+        <p>The Best Poster/Demo Award was introduced at the 5th IEEE International Conference on Autonomic Computing and Self-Organizing Systems (ACSOS) in 2023, marking the beginning of a new tradition to recognize outstanding contributions presented in the conference's poster and demo sessions.</p>
+      </div>
+    </div>
+  </section>
+
+  {posterDemoAwards.length > 0 && (
+    <section id="two" class="spotlights">
+      {posterDemoAwards.map(async (award) => {
+        const hasImage = !!award.data.image;
+
+        return (
+          <section class={hasImage ? "" : "no-image"}>
+            {hasImage && (
+              <a href={award.data.paperUrl || "#"} class="image">
+                <img src={award.data.image} alt={award.data.title} />
+              </a>
+            )}
+
+            <div class="content">
+              <div class="inner">
+                <header class="major">
+                  <h4>
+                    {award.data.paperUrl
+                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
+                      : award.data.title}
+                  </h4>
+                </header>
+
+                <p>
+                  {award.data.conference} {award.data.year} Winners:{' '}
+                  {award.data.authors.map((author, idx) => (
+                    <>
+                      <b>{author.name}</b>
+                      {author.affiliation ? `, ${author.affiliation}` : ''}
+                      {idx < award.data.authors.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+
+                {award.data.paperUrl && (
+                  <a href={award.data.paperUrl} class="button">The Paper</a>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </section>
+  )}
+
+  <!-- ---------------------------
+       ARTIFACT AWARD
+  ---------------------------- -->
+  <section class="style2">
+    <div class="inner">
+      <header id="Best-art" class="major">
+        <h3>Best Artifact Award</h3>
+      </header>
+      <div class="content">
+        <p>The Best Artifact Award was introduced at the 6th IEEE International Conference on Autonomic Computing and Self-Organizing Systems (ACSOS) in 2025, held in Tokyo, Japan, establishing a new tradition to honor exemplary research artifacts that demonstrate high standards of reproducibility, usability, and impact within the community.</p>
+      </div>
+    </div>
+  </section>
+
+  {artifactAwards.length > 0 && (
+    <section id="two" class="spotlights">
+      {artifactAwards.map(async (award) => {
+        const hasImage = !!award.data.image;
+
+        return (
+          <section class={hasImage ? "" : "no-image"}>
+            {hasImage && (
+              <a href={award.data.paperUrl || "#"} class="image">
+                <img src={award.data.image} alt={award.data.title} />
+              </a>
+            )}
+
+            <div class="content">
+              <div class="inner">
+                <header class="major">
+                  <h4>
+                    {award.data.paperUrl
+                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
+                      : award.data.title}
+                  </h4>
+                </header>
+
+                <p>
+                  {award.data.conference} {award.data.year} Winners:{' '}
+                  {award.data.authors.map((author, idx) => (
+                    <>
+                      <b>{author.name}</b>
+                      {author.affiliation ? `, ${author.affiliation}` : ''}
+                      {idx < award.data.authors.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+
+                {award.data.paperUrl && (
+                  <a href={award.data.paperUrl} class="button">The Paper</a>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </section>
+  )}
+
 </BaseLayout>
