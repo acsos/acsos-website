@@ -3,6 +3,7 @@ title: "Submission Deadline Extended"
 description: "Due to popular demand, the paper submission deadline has been extended."
 date: 2025-06-01
 image: "/images/design/pic01.jpg"
+category: "Conference news and updates"
 ---
 
 **Good news for authors!**

@@ -3,6 +3,7 @@ title: "Website Beta Launch"
 description: "The beta version of the new ACSOS website is live."
 date: 2025-01-15
 image: "/images/design/pic06.jpg"
+category: "News from the SC"
 ---
 
 Welcome to the **Beta Launch** of the new ACSOS website!

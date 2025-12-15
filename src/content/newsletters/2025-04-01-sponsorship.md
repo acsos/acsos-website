@@ -3,6 +3,7 @@ title: "Sponsorship Opportunities"
 description: "Become a sponsor of ACSOS 2025 and reach a global audience."
 date: 2025-04-01
 image: "/images/design/pic03.jpg"
+category: "Conference news and updates"
 ---
 
 ACSOS 2025 offers a unique opportunity for organizations to showcase their technology, products, and services to a highly qualified audience of researchers and practitioners in autonomic computing and self-organizing systems.

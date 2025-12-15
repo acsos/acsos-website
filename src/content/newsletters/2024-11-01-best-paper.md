@@ -3,6 +3,7 @@ title: "Best Paper Awards 2024"
 description: "Announcing the winners of the Best Paper Awards from ACSOS 2024."
 date: 2024-11-01
 image: "/images/design/pic02.jpg"
+category: "Highlights/milestones of people in ACSOS"
 ---
 
 We are proud to announce the recipients of the **Best Paper Awards** for ACSOS 2024! The selection committee had a difficult task choosing from so many excellent submissions.

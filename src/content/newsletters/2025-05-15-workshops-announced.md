@@ -3,6 +3,7 @@ title: "Call for Workshops"
 description: "Propose a workshop for ACSOS 2025! We are looking for engaging topics."
 date: 2025-05-15
 image: "/images/design/pic02.jpg"
+category: "Conference news and updates"
 ---
 
 We invite proposals for **workshops** to be held in conjunction with ACSOS 2025. Workshops provide a forum for small groups of researchers to discuss specific topics in depth, often on emerging or specialized areas relevant to the conference.

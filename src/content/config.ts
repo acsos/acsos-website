@@ -66,6 +66,7 @@ const newsletters = defineCollection({
     description: z.string(),
     date: z.date(),
     image: z.string().optional(),
+    category: z.string(),
   }),
 });
 

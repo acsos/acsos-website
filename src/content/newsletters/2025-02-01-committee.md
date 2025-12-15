@@ -3,6 +3,7 @@ title: "Organizing Committee"
 description: "Meet the organizing committee for ACSOS 2025."
 date: 2025-02-01
 image: "/images/design/pic05.jpg"
+category: "News from the SC"
 ---
 
 Planning a major international conference takes a dedicated team. We are proud to introduce the **Organizing Committee** for ACSOS 2025!

@@ -19,8 +19,19 @@ const allNewsletters = (await getCollection('newsletters'))
     description: n.data.description,
     date: n.data.date.toISOString(),
     slug: n.slug,
-    image: n.data.image || '/images/design/pic06.jpg'
+    image: n.data.image || '/images/design/pic06.jpg',
+    category: n.data.category
   }));
+
+const categoryColors = {
+  "Conference news and updates": "#2e86de",
+  "News from the SC": "#10ac84",
+  "Highlights/milestones of people in ACSOS": "#8e44ad",
+  "Recent publications": "#e67e22",
+  "Interviews": "#1abc9c",
+  "Search and find": "#e74c3c"
+};
+const defaultColor = "#95a5a6";
 ---
 
 <BaseLayout 
@@ -54,9 +65,14 @@ const allNewsletters = (await getCollection('newsletters'))
 									<div class="col-8 col-12-medium">
 										<header>
 											<h3><a href={`/newsletters/${newsletter.slug}`}>{newsletter.data.title}</a></h3>
-											<p style="font-style: italic; color: #666;">
+											<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
 												{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
 											</p>
+                                            {newsletter.data.category && (
+                                                <div class="categories" style="margin-bottom: 1em;">
+                                                    <span class="category-badge" style={`display: inline-block; background: ${categoryColors[newsletter.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em; margin-bottom: 0.5em;`}>{newsletter.data.category}</span>
+                                                </div>
+                                            )}
 										</header>
 										<p class="description">{newsletter.data.description}</p>
 										<ul class="actions">
@@ -86,7 +102,7 @@ const allNewsletters = (await getCollection('newsletters'))
 	</div>
 </BaseLayout>
 
-<script define:vars={{ allNewsletters }}>
+<script define:vars={{ allNewsletters, categoryColors, defaultColor }}>
 	const searchInput = document.getElementById('search');
 	const staticList = document.getElementById('static-list');
 	const dynamicList = document.getElementById('dynamic-list');
@@ -122,12 +138,17 @@ const allNewsletters = (await getCollection('newsletters'))
 					<div class="col-8 col-12-medium">
 						<header>
 							<h3><a href="/newsletters/${newsletter.slug}">${newsletter.title}</a></h3>
-							<p style="font-style: italic; color: #666;">
+							<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
+								${formatDate(newsletter.date)}
+							<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
 								${formatDate(newsletter.date)}
 							</p>
-						</header>
-						<p class="description">${newsletter.description}</p>
-						<ul class="actions">
+                            ${newsletter.category ? `
+                                <div class="categories" style="margin-bottom: 1em;">
+                                    <span class="category-badge" style="display: inline-block; background: ${categoryColors[newsletter.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em; margin-bottom: 0.5em;">${newsletter.category}</span>
+                                </div>
+                            ` : ''}
+						</header>="actions">
 							<li><a href="/newsletters/${newsletter.slug}" class="button">Read More</a></li>
 						</ul>
 					</div>
@@ -174,11 +195,12 @@ const allNewsletters = (await getCollection('newsletters'))
 
 				filteredNewsletters = allNewsletters.filter(n => 
 					n.title.toLowerCase().includes(term) || 
-					n.description.toLowerCase().includes(term)
+					n.description.toLowerCase().includes(term) ||
+                    (n.categories && n.categories.some(c => c.toLowerCase().includes(term)))
+				filteredNewsletters = allNewsletters.filter(n => 
+					n.title.toLowerCase().includes(term) || 
+					n.description.toLowerCase().includes(term) ||
+                    (n.category && n.category.toLowerCase().includes(term))
 				);
-				currentPage = 1;
-				renderNewsletters();
-			}
-		});
 	}
 </script>

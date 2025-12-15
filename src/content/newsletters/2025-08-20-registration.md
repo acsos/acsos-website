@@ -3,6 +3,7 @@ title: "Registration Open"
 description: "Registration for ACSOS 2025 is now open. Early bird rates available."
 date: 2025-08-20
 image: "/images/design/pic05.jpg"
+category: "Conference news and updates"
 ---
 
 Registration for **ACSOS 2025** is officially OPEN! We are excited to welcome you to Tokyo, Japan, for a week of learning, networking, and collaboration.
