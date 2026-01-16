@@ -89,79 +89,87 @@ const saso = allConferences.filter(conf => conf.data.series === 'SASO');
 				{icac.length > 0 && saso.length > 0 && (
 					<>
 						<h2 style="margin-top: 3em;">ICAC and SASO Conferences (Pre-Merger)</h2>
-						<div class="table-wrapper">
-							<table>
-								<thead>
-									<tr>
-										<th>Conference</th>
-										<th>Location</th>
-										<th>Acceptance Rate</th>
-										<th>Conference</th>
-										<th>Location</th>
-										<th>Acceptance Rate</th>
-									</tr>
-								</thead>
-								<tbody>
-									{icac.map((icacConf, index) => {
-										const sasoConf = saso.find(s => s.data.year === icacConf.data.year);
-										return (
-											<>
-												<tr>
-													{/* ICAC Column */}
-													<td>
-														{icacConf.data.website ? (
-															<a href={icacConf.data.website} target="_blank">{icacConf.data.name}</a>
-														) : (
-															<a href={`/conferences/${icacConf.data.year}`}>{icacConf.data.name}</a>
-														)}
-													</td>
-													<td>{icacConf.data.location}</td>
-													<td>{icacConf.data.acceptanceRate || ''}</td>
-													
-													{/* SASO Column */}
-													{sasoConf ? (
-														<>
-															<td>
-																{sasoConf.data.website ? (
-																	<a href={sasoConf.data.website} target="_blank">{sasoConf.data.name}</a>
-																) : (
-																	<a href={`/conferences/${sasoConf.data.year}`}>{sasoConf.data.name}</a>
-																)}
-															</td>
-															<td>{sasoConf.data.location}</td>
-															<td>{sasoConf.data.acceptanceRate || ''}</td>
-														</>
-													) : (
-														<>
-															<td></td>
-															<td></td>
-															<td></td>
-														</>
-													)}
-												</tr>
-												<tr>
-													{/* ICAC Chairs */}
-													<td colspan="3" id="series-chair-formatting">
-														<b>General Chairs:</b>
-														<ul>
-															{icacConf.data.generalChairs.map((chair) => (
-																<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-															))}
-														</ul>
-														{icacConf.data.programChairs && icacConf.data.programChairs.length > 0 && (
-															<>
-																<b>Program Chairs:</b>
-																<ul>
-																	{icacConf.data.programChairs.map((chair) => (
-																		<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-																	))}
-																</ul>
-															</>
-														)}
-													</td>
-													
-													{/* SASO Chairs */}
-													{sasoConf ? (
+						<div class="pre-merger-tables">
+							{/* ICAC Table */}
+							<div class="conference-table">
+								<h3>ICAC Conferences</h3>
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>Conference</th>
+												<th>Location</th>
+												<th>Acceptance Rate</th>
+											</tr>
+										</thead>
+										<tbody>
+											{icac.map((icacConf) => (
+												<>
+													<tr>
+														<td>
+															{icacConf.data.website ? (
+																<a href={icacConf.data.website} target="_blank">{icacConf.data.name}</a>
+															) : (
+																<a href={`/conferences/${icacConf.data.year}`}>{icacConf.data.name}</a>
+															)}
+														</td>
+														<td>{icacConf.data.location}</td>
+														<td>{icacConf.data.acceptanceRate || ''}</td>
+													</tr>
+													<tr>
+														<td colspan="3" id="series-chair-formatting">
+															<b>General Chairs:</b>
+															<ul>
+																{icacConf.data.generalChairs.map((chair) => (
+																	<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+																))}
+															</ul>
+															{icacConf.data.programChairs && icacConf.data.programChairs.length > 0 && (
+																<>
+																	<b>Program Chairs:</b>
+																	<ul>
+																		{icacConf.data.programChairs.map((chair) => (
+																			<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+																		))}
+																	</ul>
+																</>
+															)}
+														</td>
+													</tr>
+												</>
+											))}
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							{/* SASO Table */}
+							<div class="conference-table">
+								<h3>SASO Conferences</h3>
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>Conference</th>
+												<th>Location</th>
+												<th>Acceptance Rate</th>
+											</tr>
+										</thead>
+										<tbody>
+											{saso.map((sasoConf) => (
+												<>
+													<tr>
+														<td>
+															{sasoConf.data.website ? (
+																<a href={sasoConf.data.website} target="_blank">{sasoConf.data.name}</a>
+															) : (
+																<a href={`/conferences/${sasoConf.data.year}`}>{sasoConf.data.name}</a>
+															)}
+														</td>
+														<td>{sasoConf.data.location}</td>
+														<td>{sasoConf.data.acceptanceRate || ''}</td>
+													</tr>
+													<tr>
 														<td colspan="3" id="series-chair-formatting">
 															<b>General Chairs:</b>
 															<ul>
@@ -180,15 +188,13 @@ const saso = allConferences.filter(conf => conf.data.series === 'SASO');
 																</>
 															)}
 														</td>
-													) : (
-														<td colspan="3"></td>
-													)}
-												</tr>
-											</>
-										);
-									})}
-								</tbody>
-							</table>
+													</tr>
+												</>
+											))}
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</>
 				)}
@@ -197,3 +203,48 @@ const saso = allConferences.filter(conf => conf.data.series === 'SASO');
 		</section>
 	</div>
 </BaseLayout>
+
+<style>
+	/* Make the pre-merger table responsive on mobile */
+	.pre-merger-tables {
+		display: flex;
+		flex-direction: row;
+		gap: 2em;
+	}
+
+	.pre-merger-tables .conference-table {
+		flex: 1;
+	}
+
+	.pre-merger-tables .conference-table h3 {
+		margin-bottom: 1em;
+	}
+
+	/* On mobile, stack the tables vertically */
+	@media screen and (max-width: 980px) {
+		.pre-merger-tables {
+			flex-direction: column;
+		}
+
+		.pre-merger-tables .conference-table {
+			width: 100%;
+		}
+	}
+
+	/* Ensure table wrapper allows horizontal scroll if needed */
+	.table-wrapper {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	@media screen and (max-width: 736px) {
+		.table-wrapper table {
+			font-size: 0.85em;
+		}
+
+		.table-wrapper table td,
+		.table-wrapper table th {
+			padding: 0.5em;
+		}
+	}
+</style>
