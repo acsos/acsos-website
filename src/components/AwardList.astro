@@ -18,12 +18,12 @@ const getPlaceholder = (category) => {
       const image = award.data.image || getPlaceholder(award.data.category);
 
       return (
-        <section style="padding: 2em;">
-          <a href={award.data.paperUrl || "#"} class="image" style="width: 20%;">
+        <section class="award-item">
+          <a href={award.data.paperUrl || "#"} class="image award-image">
             <img src={image} alt={award.data.title} />
           </a>
 
-          <div class="content" style="width: 80%;">
+          <div class="content award-content">
             <div class="inner">
               <header class="major">
                 <h4>
@@ -54,3 +54,81 @@ const getPlaceholder = (category) => {
     })}
   </section>
 )}
+
+<style>
+  .award-item {
+    padding: 2em;
+    align-items: flex-start;
+  }
+
+  .award-image {
+    width: 20%;
+    flex-shrink: 0;
+  }
+
+  .award-content {
+    width: 80%;
+    min-width: 0;
+    align-items: flex-start !important;
+  }
+
+  .award-content .inner {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .award-content h4 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  .award-content h4 a {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    display: inline;
+  }
+
+  /* Override the alternating row alignment to prevent text cutoff */
+  .spotlights > .award-item:nth-child(2n) > .award-content {
+    align-items: flex-start !important;
+  }
+
+  /* Mobile responsive styles */
+  @media screen and (max-width: 980px) {
+    .award-item {
+      flex-direction: column !important;
+      display: flex;
+    }
+
+    .award-image {
+      width: 60% !important;
+      margin: 0 auto 1.5em auto;
+    }
+
+    .award-content {
+      width: 100% !important;
+    }
+  }
+
+  @media screen and (max-width: 736px) {
+    .award-image {
+      width: 80% !important;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .award-item {
+      padding: 1.5em;
+    }
+
+    .award-image {
+      width: 100% !important;
+      max-width: 250px;
+    }
+  }
+</style>
