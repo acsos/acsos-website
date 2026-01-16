@@ -3,10 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Banner from '../components/Banner.astro';
 import Tiles from '../components/Tiles.astro';
 import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site';
 
-const newsletters = (await getCollection('newsletters'))
-	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-	.slice(0, 3);
+const newsletters = siteConfig.showNews 
+	? (await getCollection('newsletters'))
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+		.slice(0, 3)
+	: [];
 
 const categoryColors = {
   "Conference news and updates": "#2e86de",
@@ -56,12 +59,12 @@ const tiles = [
 		description: 'Steering Committee and Advisory Board',
 		link: '/leadership'
 	},
-	{
+	...(siteConfig.showNews ? [{
 		image: '/images/design/pic07.jpg',
 		title: 'News',
 		description: 'Latest updates and announcements',
 		link: '/newsletters'
-	}
+	}] : [])
 ];
 ---
 
@@ -129,6 +132,7 @@ const tiles = [
 		</section>
 
 		<!-- Newsletters Section -->
+		{siteConfig.showNews && (
 		<section id="news-main">
 			<div class="inner">
 				<header class="major">
@@ -163,5 +167,6 @@ const tiles = [
 				</ul>
 			</div>
 		</section>
+		)}
 	</div>
 </BaseLayout>
