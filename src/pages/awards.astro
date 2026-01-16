@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SecondaryBanner from '../components/SecondaryBanner.astro';
+import AwardList from '../components/AwardList.astro';
 import { getCollection } from 'astro:content';
 
 // Get all awards and sort by year (newest first)
@@ -50,51 +51,7 @@ const artifactAwards = allAwards.filter(a => a.data.category === 'best-artifact'
     </div>
   </section>
 
-  {karstenAwards.length > 0 && (
-    <section id="two" class="spotlights">
-      {karstenAwards.map(async (award) => {
-        const { Content } = await award.render();
-        const hasImage = !!award.data.image;
-
-        return (
-          <section class={hasImage ? "" : "no-image"}>
-            {hasImage && (
-              <a href={award.data.paperUrl || "#"} class="image">
-                <img src={award.data.image} alt={award.data.title} />
-              </a>
-            )}
-
-            <div class="content">
-              <div class="inner">
-                <header class="major">
-                  <h4>
-                    {award.data.paperUrl
-                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
-                      : award.data.title}
-                  </h4>
-                </header>
-
-                <p>
-                  {award.data.conference} {award.data.year} Winners:{' '}
-                  {award.data.authors.map((author, idx) => (
-                    <>
-                      <b>{author.name}</b>
-                      {author.affiliation ? `, ${author.affiliation}` : ''}
-                      {idx < award.data.authors.length - 1 ? ', ' : ''}
-                    </>
-                  ))}
-                </p>
-
-                {award.data.paperUrl && (
-                  <a href={award.data.paperUrl} class="button">The Paper</a>
-                )}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-    </section>
-  )}
+  <AwardList awards={karstenAwards} />
 
   <!-- ---------------------------
        STUDENT AWARD
@@ -110,50 +67,7 @@ const artifactAwards = allAwards.filter(a => a.data.category === 'best-artifact'
     </div>
   </section>
 
-  {studentAwards.length > 0 && (
-    <section id="two" class="spotlights">
-      {studentAwards.map(async (award) => {
-        const hasImage = !!award.data.image;
-
-        return (
-          <section class={hasImage ? "" : "no-image"}>
-            {hasImage && (
-              <a href={award.data.paperUrl || "#"} class="image">
-                <img src={award.data.image} alt={award.data.title} />
-              </a>
-            )}
-
-            <div class="content">
-              <div class="inner">
-                <header class="major">
-                  <h4>
-                    {award.data.paperUrl
-                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
-                      : award.data.title}
-                  </h4>
-                </header>
-
-                <p>
-                  {award.data.conference} {award.data.year} Winners:{' '}
-                  {award.data.authors.map((author, idx) => (
-                    <>
-                      <b>{author.name}</b>
-                      {author.affiliation ? `, ${author.affiliation}` : ''}
-                      {idx < award.data.authors.length - 1 ? ', ' : ''}
-                    </>
-                  ))}
-                </p>
-
-                {award.data.paperUrl && (
-                  <a href={award.data.paperUrl} class="button">The Paper</a>
-                )}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-    </section>
-  )}
+  <AwardList awards={studentAwards} />
 
   <!-- ---------------------------
        POSTER/DEMO AWARD
@@ -169,50 +83,7 @@ const artifactAwards = allAwards.filter(a => a.data.category === 'best-artifact'
     </div>
   </section>
 
-  {posterDemoAwards.length > 0 && (
-    <section id="two" class="spotlights">
-      {posterDemoAwards.map(async (award) => {
-        const hasImage = !!award.data.image;
-
-        return (
-          <section class={hasImage ? "" : "no-image"}>
-            {hasImage && (
-              <a href={award.data.paperUrl || "#"} class="image">
-                <img src={award.data.image} alt={award.data.title} />
-              </a>
-            )}
-
-            <div class="content">
-              <div class="inner">
-                <header class="major">
-                  <h4>
-                    {award.data.paperUrl
-                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
-                      : award.data.title}
-                  </h4>
-                </header>
-
-                <p>
-                  {award.data.conference} {award.data.year} Winners:{' '}
-                  {award.data.authors.map((author, idx) => (
-                    <>
-                      <b>{author.name}</b>
-                      {author.affiliation ? `, ${author.affiliation}` : ''}
-                      {idx < award.data.authors.length - 1 ? ', ' : ''}
-                    </>
-                  ))}
-                </p>
-
-                {award.data.paperUrl && (
-                  <a href={award.data.paperUrl} class="button">The Paper</a>
-                )}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-    </section>
-  )}
+  <AwardList awards={posterDemoAwards} />
 
   <!-- ---------------------------
        ARTIFACT AWARD
@@ -228,49 +99,6 @@ const artifactAwards = allAwards.filter(a => a.data.category === 'best-artifact'
     </div>
   </section>
 
-  {artifactAwards.length > 0 && (
-    <section id="two" class="spotlights">
-      {artifactAwards.map(async (award) => {
-        const hasImage = !!award.data.image;
-
-        return (
-          <section class={hasImage ? "" : "no-image"}>
-            {hasImage && (
-              <a href={award.data.paperUrl || "#"} class="image">
-                <img src={award.data.image} alt={award.data.title} />
-              </a>
-            )}
-
-            <div class="content">
-              <div class="inner">
-                <header class="major">
-                  <h4>
-                    {award.data.paperUrl
-                      ? <a href={award.data.paperUrl}>{award.data.title}</a>
-                      : award.data.title}
-                  </h4>
-                </header>
-
-                <p>
-                  {award.data.conference} {award.data.year} Winners:{' '}
-                  {award.data.authors.map((author, idx) => (
-                    <>
-                      <b>{author.name}</b>
-                      {author.affiliation ? `, ${author.affiliation}` : ''}
-                      {idx < award.data.authors.length - 1 ? ', ' : ''}
-                    </>
-                  ))}
-                </p>
-
-                {award.data.paperUrl && (
-                  <a href={award.data.paperUrl} class="button">The Paper</a>
-                )}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-    </section>
-  )}
+  <AwardList awards={artifactAwards} />
 
 </BaseLayout>

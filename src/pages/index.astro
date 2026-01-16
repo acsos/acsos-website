@@ -2,6 +2,24 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Banner from '../components/Banner.astro';
 import Tiles from '../components/Tiles.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site';
+
+const newsletters = siteConfig.showNews 
+	? (await getCollection('newsletters'))
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+		.slice(0, 3)
+	: [];
+
+const categoryColors = {
+  "Conference news and updates": "#2e86de",
+  "News from the SC": "#10ac84",
+  "Highlights/milestones of people in ACSOS": "#8e44ad",
+  "Recent publications": "#e67e22",
+  "Interviews": "#1abc9c",
+  "Search and find": "#e74c3c"
+};
+const defaultColor = "#95a5a6";
 
 const tiles = [
 	{
@@ -40,7 +58,13 @@ const tiles = [
 		title: 'Leadership',
 		description: 'Steering Committee and Advisory Board',
 		link: '/leadership'
-	}
+	},
+	...(siteConfig.showNews ? [{
+		image: '/images/design/pic07.jpg',
+		title: 'News',
+		description: 'Latest updates and announcements',
+		link: '/newsletters'
+	}] : [])
 ];
 ---
 
@@ -106,5 +130,43 @@ const tiles = [
 				</p>
 			</div>
 		</section>
+
+		<!-- Newsletters Section -->
+		{siteConfig.showNews && (
+		<section id="news-main">
+			<div class="inner">
+				<header class="major">
+					<h2>Recent News</h2>
+				</header>
+				<div class="row gtr-uniform">
+					{newsletters.map((newsletter) => (
+						<div class="col-4 col-12-medium">
+							<div style="height: 100%; display: flex; flex-direction: column;">
+								<span class="image fit">
+									<img src={newsletter.data.image || '/images/design/pic06.jpg'} alt="" style="height: 250px; object-fit: cover;" />
+								</span>
+								<h3 style="min-height: 3em; margin-bottom: 0.5em;">{newsletter.data.title}</h3>
+								<p style="font-style: italic; color: #666; margin-bottom: 0.25em; line-height: 1.2;">
+									{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+								</p>
+                                <div class="categories" style="margin-bottom: 0.5em; line-height: 1.2; min-height: 2em;">
+                                    {newsletter.data.category && (
+                                        <span class="category-badge" style={`display: inline-block; background: ${categoryColors[newsletter.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.7em;`}>{newsletter.data.category}</span>
+                                    )}
+                                </div>
+								<p style="flex-grow: 1;">{newsletter.data.description}</p>
+								<ul class="actions">
+									<li><a href={`/newsletters/${newsletter.slug}`} class="button">Read More</a></li>
+								</ul>
+							</div>
+						</div>
+					))}
+				</div>
+				<ul class="actions" style="margin-top: 2em;">
+					<li><a href="/newsletters" class="button primary">View All News</a></li>
+				</ul>
+			</div>
+		</section>
+		)}
 	</div>
 </BaseLayout>

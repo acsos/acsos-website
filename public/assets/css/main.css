@@ -2758,6 +2758,7 @@ input, select, textarea {
 			overflow: hidden;
 			position: relative;
 			width: 40%;
+			flex-grow: 1;
 		}
 
 			.tiles article .image {
@@ -2835,28 +2836,32 @@ input, select, textarea {
 				width: 60%;
 			}
 
-			.tiles article:nth-child(6n - 5):before {
+			.tiles article:nth-child(7n - 6):before {
 				background-color: #6fc3df;
 			}
 
-			.tiles article:nth-child(6n - 4):before {
-				background-color: #8d82c4;
+			.tiles article:nth-child(7n - 5):before {
+				background-color: #87c5a4;
 			}
 
-			.tiles article:nth-child(6n - 3):before {
+			.tiles article:nth-child(7n - 4):before {
 				background-color: #ec8d81;
 			}
 
-			.tiles article:nth-child(6n - 2):before {
+			.tiles article:nth-child(7n - 3):before {
 				background-color: #e7b788;
 			}
 
-			.tiles article:nth-child(6n - 1):before {
+			.tiles article:nth-child(7n - 2):before {
 				background-color: #8ea9e8;
 			}
 
-			.tiles article:nth-child(6n):before {
-				background-color: #87c5a4;
+			.tiles article:nth-child(7n - 1):before {
+				background-color: #2e3450;
+			}
+
+			.tiles article:nth-child(7n):before {
+				background-color: #8d82c4;
 			}
 
 		@media screen and (max-width: 1280px) {

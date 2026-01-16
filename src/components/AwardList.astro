@@ -1,0 +1,56 @@
+---
+const { awards } = Astro.props;
+
+const getPlaceholder = (category) => {
+  switch(category) {
+    case 'karsten-schwan': return '/images/design/best-paper-award.png';
+    case 'best-student': return '/images/design/best-student-paper.png';
+    case 'best-poster-demo': return '/images/design/best-poster.png';
+    case 'best-artifact': return '/images/design/best.-artifact.png';
+    default: return '/images/acsos-logo.jpg';
+  }
+}
+---
+
+{awards.length > 0 && (
+  <section id="two" class="spotlights">
+    {awards.map(async (award) => {
+      const image = award.data.image || getPlaceholder(award.data.category);
+
+      return (
+        <section style="padding: 2em;">
+          <a href={award.data.paperUrl || "#"} class="image" style="width: 20%;">
+            <img src={image} alt={award.data.title} />
+          </a>
+
+          <div class="content" style="width: 80%;">
+            <div class="inner">
+              <header class="major">
+                <h4>
+                  {award.data.paperUrl
+                    ? <a href={award.data.paperUrl}>{award.data.title}</a>
+                    : award.data.title}
+                </h4>
+              </header>
+
+              <p>
+                {award.data.conference} {award.data.year} Winners:{' '}
+                {award.data.authors.map((author, idx) => (
+                  <>
+                    <b>{author.name}</b>
+                    {author.affiliation ? `, ${author.affiliation}` : ''}
+                    {idx < award.data.authors.length - 1 ? ', ' : ''}
+                  </>
+                ))}
+              </p>
+
+              {award.data.paperUrl && (
+                <a href={award.data.paperUrl} class="button">The Paper</a>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    })}
+  </section>
+)}

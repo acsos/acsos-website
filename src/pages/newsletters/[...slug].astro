@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecondaryBanner from '../../components/SecondaryBanner.astro';
+
+export async function getStaticPaths() {
+  const newsletters = await getCollection('newsletters');
+  return newsletters.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const categoryColors = {
+  "Conference news and updates": "#2e86de",
+  "News from the SC": "#10ac84",
+  "Highlights/milestones of people in ACSOS": "#8e44ad",
+  "Recent publications": "#e67e22",
+  "Interviews": "#1abc9c",
+  "Search and find": "#e74c3c"
+};
+const defaultColor = "#95a5a6";
+---
+
+<BaseLayout title={entry.data.title} headerStyle="alt style2">
+	<SecondaryBanner title={entry.data.title}>
+        <p>{entry.data.description}</p>
+        <p style="font-size: 0.8em; opacity: 0.8; margin-bottom: 0.5em;">{entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        {entry.data.category && (
+            <div class="categories" style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 0.5em;">
+                <span class="category-badge" style={`display: inline-block; background: ${categoryColors[entry.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em;`}>{entry.data.category}</span>
+            </div>
+        )}
+    </SecondaryBanner>
+	<div id="main">
+		<section>
+			<div class="inner">
+				<Content />
+                <hr />
+                <a href="/newsletters" class="button">Back to Newsletters</a>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
