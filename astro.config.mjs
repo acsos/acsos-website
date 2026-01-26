@@ -5,6 +5,5 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://acsos.github.io/',
-  base: '/acsos-website', // o il path specifico se deployi in una sottocartella
+  site: 'https://acsos.github.io/'
 });

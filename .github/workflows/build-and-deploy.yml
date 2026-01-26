@@ -3,10 +3,9 @@ on:
   pull_request:
   push:
     branches: [main]
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Allow only one concurrent deployment
 concurrency:
@@ -37,17 +36,31 @@ jobs:
         run: npm run build
       
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
+          name: dist
           path: ./dist
 
   deploy:
     needs: build
     runs-on: ubuntu-24.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    if: github.event_name == 'push' && github.ref_name == 'main'
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+      
+      - name: Debug
+        run: echo $GITHUB_REPOSITORY
+      
+      - name: Deploy to acsos.github.io
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          git-config-name: github-actions
+          git-config-email: github-actions@github.com
+          repository-name: acsos/acsos.github.io
+          branch: new-website
+          folder: dist
