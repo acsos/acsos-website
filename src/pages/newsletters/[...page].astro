@@ -13,34 +13,58 @@ const { page } = Astro.props;
 
 // Get all newsletters for client-side search
 const allNewsletters = (await getCollection('newsletters'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .map(n => ({
-    title: n.data.title,
-    description: n.data.description,
+    title: n.data.title || "",
+    description: n.data.description || "",
     date: n.data.date.toISOString(),
     slug: n.slug,
     image: n.data.image || '/images/design/pic06.jpg',
-    category: n.data.category
-  }));
+    category: Array.isArray(n.data.category) ? n.data.category : (n.data.category ? [n.data.category] : []),
+    words: n.data.words || [],
+    weight: n.data.weight || []
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 const categoryColors = {
-  "Conference news and updates": "#2e86de",
+  "conference": "#2e86de",
   "News from the SC": "#10ac84",
-  "Highlights/milestones of people in ACSOS": "#8e44ad",
-  "Recent publications": "#e67e22",
+  "milestone": "#8e44ad",
+  "publication": "#e67e22",
+  "funding": "#f1c40f",
   "Interviews": "#1abc9c",
-  "Search and find": "#e74c3c"
+  "Search and find": "#e74c3c",
+  "Community news": "#f39c12",
+  "event": "#e84393"
 };
 const defaultColor = "#95a5a6";
 ---
 
+<style>
+	.newsletter-item {
+		transition: opacity 0.4s ease, transform 0.4s ease;
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	.newsletter-item.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	#dynamic-newsletter-list {
+		transition: opacity 0.2s ease;
+	}
+</style>
+
 <BaseLayout 
 	title={`ACSOS Newsletters - Page ${page.currentPage}`}
-	description="Latest news and updates from ACSOS"
+	description="Latest updates and announcements from ACSOS"
 	headerStyle="alt style2"
 >
-	<SecondaryBanner title="News" styleClass="alt style2">
-		<p>Latest news and updates from the ACSOS community</p>
+	<SecondaryBanner 
+		title="Newsletters" 
+		styleClass="alt style2"
+		background={`url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E"), linear-gradient(135deg, #34495e, #2c3e50)`}
+	>
+		<p>Latest updates and announcements from the ACSOS community</p>
 	</SecondaryBanner>
 
 	<div id="main">
@@ -53,34 +77,42 @@ const defaultColor = "#95a5a6";
 				
 				<!-- Static List (Server Rendered) -->
 				<div id="static-list">
-					<div id="newsletter-list">
+					<div id="newsletter-list" class="row gtr-uniform">
 						{page.data.map((newsletter) => (
-							<article class="newsletter-item" style="margin-bottom: 3em; border-bottom: 1px solid #eee; padding-bottom: 2em;">
-								<div class="row">
-									<div class="col-4 col-12-medium">
-										<span class="image fit">
-											<img src={newsletter.data.image || '/images/design/pic06.jpg'} alt="" />
-										</span>
-									</div>
-									<div class="col-8 col-12-medium">
-										<header>
-											<h3><a href={`/newsletters/${newsletter.slug}`}>{newsletter.data.title}</a></h3>
-											<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
-												{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-											</p>
-                                            {newsletter.data.category && (
-                                                <div class="categories" style="margin-bottom: 1em;">
-                                                    <span class="category-badge" style={`display: inline-block; background: ${categoryColors[newsletter.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em; margin-bottom: 0.5em;`}>{newsletter.data.category}</span>
-                                                </div>
-                                            )}
-										</header>
-										<p class="description">{newsletter.data.description}</p>
-										<ul class="actions">
-											<li><a href={`/newsletters/${newsletter.slug}`} class="button">Read More</a></li>
-										</ul>
-									</div>
+							<div class="col-6 col-12-medium" style="margin-bottom: 4em;">
+								<div style="height: 100%; display: flex; flex-direction: column; transition: transform 0.3s ease;">
+									<h2 style="margin-bottom: 0.25em; font-size: 2em;"><a href={`/newsletters/${newsletter.slug}`}>{newsletter.data.title}</a></h2>
+									<p style="font-style: italic; color: rgba(255,255,255,0.5); margin-bottom: 1em; font-size: 1.1em; letter-spacing: 1px;">
+										{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+									</p>
+                                    {newsletter.data.words && newsletter.data.weight && newsletter.data.words.length > 0 && (
+                                        <div class="word-cloud" style="margin-bottom: 1.5em; display: flex; flex-wrap: wrap; gap: 0.8em; align-items: center; background: rgba(255,255,255,0.02); padding: 1.2em 1.5em; border-radius: 8px; justify-content: flex-start; min-height: 80px;">
+                                            {newsletter.data.words.map((word, i) => {
+                                                const minW = Math.min(...newsletter.data.weight);
+                                                const maxW = Math.max(...newsletter.data.weight);
+                                                const currentW = newsletter.data.weight[i];
+                                                const size = maxW === minW ? 1.1 : 0.9 + (currentW - minW) / (maxW - minW) * 0.7;
+                                                const opacity = 0.5 + (currentW - minW) / (maxW - minW) * 0.5;
+                                                const color = currentW === maxW ? '#3fa9f5' : '#ffffff';
+                                                return (
+                                                    <span style={`font-size: ${size}em; opacity: ${opacity}; color: ${color}; line-height: 1.1; font-weight: ${currentW === maxW ? '600' : '400'}; transform: rotate(${i % 5 === 0 ? '-2deg' : (i % 7 === 0 ? '2deg' : '0deg')}); display: inline-block;`}>{word}</span>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                    {newsletter.data.category && (
+                                        <div class="categories" style="margin-bottom: 1.5em; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 0.75em;">
+                                            {newsletter.data.category.map(cat => (
+                                                <span class="category-badge" style={`display: inline-block; background: ${categoryColors[cat] || defaultColor}; color: #fff; padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;`}>{cat}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <p style="flex-grow: 1; line-height: 1.6; opacity: 0.8; margin-bottom: 1.5em;">{newsletter.data.description}</p>
+									<ul class="actions" style="margin-top: auto;">
+										<li><a href={`/newsletters/${newsletter.slug}`} class="button primary">Read More</a></li>
+									</ul>
 								</div>
-							</article>
+							</div>
 						))}
 					</div>
 
@@ -94,113 +126,169 @@ const defaultColor = "#95a5a6";
 
 				<!-- Dynamic List (Client Rendered) -->
 				<div id="dynamic-list" style="display: none;">
-					<div id="dynamic-newsletter-list"></div>
+					<div id="dynamic-newsletter-list" class="row gtr-uniform"></div>
 					<div id="dynamic-pagination" class="pagination" style="display: flex; justify-content: center; gap: 1em; margin-top: 2em;"></div>
 				</div>
 			</div>
 		</section>
 	</div>
-</BaseLayout>
 
-<script define:vars={{ allNewsletters, categoryColors, defaultColor }}>
-	const searchInput = document.getElementById('search');
-	const staticList = document.getElementById('static-list');
-	const dynamicList = document.getElementById('dynamic-list');
-	const dynamicNewsletterList = document.getElementById('dynamic-newsletter-list');
-	const dynamicPagination = document.getElementById('dynamic-pagination');
+	<script define:vars={{ allNewsletters, categoryColors, defaultColor }}>
+		const searchInput = document.getElementById('search');
+		const staticList = document.getElementById('static-list');
+		const dynamicList = document.getElementById('dynamic-list');
+		const dynamicNewsletterList = document.getElementById('dynamic-newsletter-list');
+		const dynamicPagination = document.getElementById('dynamic-pagination');
 
-	let currentPage = 1;
-	const pageSize = 10;
-	let filteredNewsletters = [...allNewsletters];
+		let currentPage = 1;
+		const pageSize = 10;
+		let filteredNewsletters = [...allNewsletters];
 
-	function formatDate(dateString) {
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-	}
+		function debounce(func, wait) {
+			let timeout;
+			return function executedFunction(...args) {
+				const later = () => {
+					clearTimeout(timeout);
+					func(...args);
+				};
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+			};
+		}
 
-	function renderNewsletters() {
-		if (!dynamicNewsletterList || !dynamicPagination) return;
+		function formatDate(dateString) {
+			const date = new Date(dateString);
+			return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+		}
 
-		const start = (currentPage - 1) * pageSize;
-		const end = start + pageSize;
-		const pageItems = filteredNewsletters.slice(start, end);
-		const totalPages = Math.ceil(filteredNewsletters.length / pageSize);
+		function renderWordCloud(words, weights) {
+			if (!words || !weights || words.length === 0) return '';
+			const minW = Math.min(...weights);
+			const maxW = Math.max(...weights);
+			
+			const cloudHtml = words.map((word, i) => {
+				const currentW = weights[i];
+				const size = maxW === minW ? 1.1 : 0.9 + (currentW - minW) / (maxW - minW) * 0.7;
+				const opacity = 0.5 + (currentW - minW) / (maxW - minW) * 0.5;
+				const color = currentW === maxW ? '#3fa9f5' : '#ffffff';
+				const fontWeight = currentW === maxW ? '600' : '400';
+				const rotation = i % 5 === 0 ? '-2deg' : (i % 7 === 0 ? '2deg' : '0deg');
+				
+				return `<span style="font-size: ${size}em; opacity: ${opacity}; color: ${color}; line-height: 1.1; font-weight: ${fontWeight}; transform: rotate(${rotation}); display: inline-block;">${word}</span>`;
+			}).join('');
 
-		// Render Items
-		dynamicNewsletterList.innerHTML = pageItems.map(newsletter => `
-			<article class="newsletter-item" style="margin-bottom: 3em; border-bottom: 1px solid #eee; padding-bottom: 2em;">
-				<div class="row">
-					<div class="col-4 col-12-medium">
-						<span class="image fit">
-							<img src="${newsletter.image}" alt="" />
-						</span>
-					</div>
-					<div class="col-8 col-12-medium">
-						<header>
-							<h3><a href="/newsletters/${newsletter.slug}">${newsletter.title}</a></h3>
-							<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
-								${formatDate(newsletter.date)}
-							<p style="font-style: italic; color: #666; margin-bottom: 0.5em;">
+			return `<div class="word-cloud" style="margin-bottom: 1.5em; display: flex; flex-wrap: wrap; gap: 0.8em; align-items: center; background: rgba(255,255,255,0.02); padding: 1.2em 1.5em; border-radius: 8px; justify-content: flex-start; min-height: 80px;">${cloudHtml}</div>`;
+		}
+
+		function renderNewsletters() {
+			if (!dynamicNewsletterList || !dynamicPagination) return;
+
+			const start = (currentPage - 1) * pageSize;
+			const end = start + pageSize;
+			const pageItems = filteredNewsletters.slice(start, end);
+			const totalPages = Math.ceil(filteredNewsletters.length / pageSize);
+
+			// Start with fade out
+			dynamicNewsletterList.style.opacity = '0';
+
+			setTimeout(() => {
+				if (pageItems.length === 0) {
+					dynamicNewsletterList.innerHTML = '<div class="col-12"><p>No newsletters found.</p></div>';
+					dynamicPagination.style.display = 'none';
+					dynamicNewsletterList.style.opacity = '1';
+					return;
+				}
+
+				// Render Items
+				const resultsInfo = `<div class="col-12 newsletter-item" style="transition-delay: 0s;"><p style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Found ${filteredNewsletters.length} newsletters</p></div>`;
+				
+				dynamicNewsletterList.innerHTML = resultsInfo + pageItems.map((newsletter, index) => `
+					<div class="col-6 col-12-medium newsletter-item" style="margin-bottom: 4em; transition-delay: ${index * 0.05}s;">
+						<div style="height: 100%; display: flex; flex-direction: column; transition: transform 0.3s ease;">
+							<h2 style="margin-bottom: 0.25em; font-size: 2em;"><a href="/newsletters/${newsletter.slug}">${newsletter.title}</a></h2>
+							<p style="font-style: italic; color: rgba(255,255,255,0.5); margin-bottom: 1em; font-size: 1.1em; letter-spacing: 1px;">
 								${formatDate(newsletter.date)}
 							</p>
-                            ${newsletter.category ? `
-                                <div class="categories" style="margin-bottom: 1em;">
-                                    <span class="category-badge" style="display: inline-block; background: ${categoryColors[newsletter.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em; margin-bottom: 0.5em;">${newsletter.category}</span>
-                                </div>
-                            ` : ''}
-						</header>="actions">
-							<li><a href="/newsletters/${newsletter.slug}" class="button">Read More</a></li>
-						</ul>
+							${renderWordCloud(newsletter.words, newsletter.weight)}
+							${newsletter.category && newsletter.category.length > 0 ? `
+								<div class="categories" style="margin-bottom: 1.5em; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 0.75em;">
+									${newsletter.category.map(cat => 
+										`<span class="category-badge" style="display: inline-block; background: ${categoryColors[cat] || defaultColor}; color: #fff; padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;">${cat}</span>`
+									).join('')}
+								</div>
+							` : ''}
+							<p style="flex-grow: 1; line-height: 1.6; opacity: 0.8; margin-bottom: 1.5em;">${newsletter.description}</p>
+							<ul class="actions" style="margin-top: auto;">
+								<li><a href="/newsletters/${newsletter.slug}" class="button primary">Read More</a></li>
+							</ul>
+						</div>
 					</div>
-				</div>
-			</article>
-		`).join('');
+				`).join('');
 
-		if (pageItems.length === 0) {
-			dynamicNewsletterList.innerHTML = '<p>No newsletters found.</p>';
+				// Trigger fade in and staggered animation
+				dynamicNewsletterList.style.opacity = '1';
+				requestAnimationFrame(() => {
+					const items = dynamicNewsletterList.querySelectorAll('.newsletter-item');
+					items.forEach(item => item.classList.add('visible'));
+				});
+
+				// Render Pagination
+				if (totalPages > 1) {
+					dynamicPagination.innerHTML = `
+						<button class="button ${currentPage === 1 ? 'disabled' : ''}" onclick="window.changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+						<span style="align-self: center;">Page ${currentPage} of ${totalPages}</span>
+						<button class="button ${currentPage === totalPages ? 'disabled' : ''}" onclick="window.changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+					`;
+					dynamicPagination.style.display = 'flex';
+				} else {
+					dynamicPagination.style.display = 'none';
+				}
+			}, 100);
 		}
 
-		// Render Pagination
-		if (totalPages > 1) {
-			dynamicPagination.innerHTML = `
-				<button class="button ${currentPage === 1 ? 'disabled' : ''}" onclick="window.changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
-				<span style="align-self: center;">Page ${currentPage} of ${totalPages}</span>
-				<button class="button ${currentPage === totalPages ? 'disabled' : ''}" onclick="window.changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
-			`;
-			dynamicPagination.style.display = 'flex';
-		} else {
-			dynamicPagination.style.display = 'none';
+		// Expose changePage to global scope for inline onclick handlers
+		window.changePage = (newPage) => {
+			currentPage = newPage;
+			renderNewsletters();
+			// Scroll to top of list
+			const main = document.getElementById('main');
+			if (main) main.scrollIntoView({ behavior: 'smooth' });
+		};
+
+		if (searchInput) {
+			const performSearch = debounce((term) => {
+				if (term === '') {
+					staticList.style.display = 'block';
+					dynamicList.style.display = 'none';
+				} else {
+					staticList.style.display = 'none';
+					dynamicList.style.display = 'block';
+
+					filteredNewsletters = allNewsletters.filter(n => {
+						const titleMatch = (n.title || "").toLowerCase().includes(term);
+						const descMatch = (n.description || "").toLowerCase().includes(term);
+						let catMatch = false;
+						if (Array.isArray(n.category)) {
+							catMatch = n.category.some(cat => (cat || "").toLowerCase().includes(term));
+						} else if (typeof n.category === 'string') {
+							catMatch = n.category.toLowerCase().includes(term);
+						}
+						return titleMatch || descMatch || catMatch;
+					});
+					currentPage = 1;
+					renderNewsletters();
+				}
+			}, 250);
+
+			searchInput.addEventListener('input', (e) => {
+				const term = e.target.value.toLowerCase().trim();
+				performSearch(term);
+			});
+
+			// Handle initial value (e.g. on browser back)
+			if (searchInput.value.trim() !== '') {
+				performSearch(searchInput.value.toLowerCase().trim());
+			}
 		}
-	}
-
-	// Expose changePage to global scope for inline onclick handlers
-	window.changePage = (newPage) => {
-		currentPage = newPage;
-		renderNewsletters();
-		// Scroll to top of list
-		const main = document.getElementById('main');
-		if (main) main.scrollIntoView({ behavior: 'smooth' });
-	};
-
-	if (searchInput) {
-		searchInput.addEventListener('input', (e) => {
-			const term = e.target.value.toLowerCase();
-
-			if (term.trim() === '') {
-				staticList.style.display = 'block';
-				dynamicList.style.display = 'none';
-			} else {
-				staticList.style.display = 'none';
-				dynamicList.style.display = 'block';
-
-				filteredNewsletters = allNewsletters.filter(n => 
-					n.title.toLowerCase().includes(term) || 
-					n.description.toLowerCase().includes(term) ||
-                    (n.categories && n.categories.some(c => c.toLowerCase().includes(term)))
-				filteredNewsletters = allNewsletters.filter(n => 
-					n.title.toLowerCase().includes(term) || 
-					n.description.toLowerCase().includes(term) ||
-                    (n.category && n.category.toLowerCase().includes(term))
-				);
-	}
-</script>
+	</script>
+</BaseLayout>

@@ -14,23 +14,31 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 const categoryColors = {
-  "Conference news and updates": "#2e86de",
+  "conference": "#2e86de",
   "News from the SC": "#10ac84",
-  "Highlights/milestones of people in ACSOS": "#8e44ad",
-  "Recent publications": "#e67e22",
+  "milestone": "#8e44ad",
+  "publication": "#e67e22",
+  "funding": "#f1c40f",
   "Interviews": "#1abc9c",
-  "Search and find": "#e74c3c"
+  "Search and find": "#e74c3c",
+  "Community news": "#f39c12",
+  "event": "#e84393"
 };
 const defaultColor = "#95a5a6";
 ---
 
 <BaseLayout title={entry.data.title} headerStyle="alt style2">
-	<SecondaryBanner title={entry.data.title} styleClass="alt style2">
-        <p>{entry.data.description}</p>
-        <p style="font-size: 0.8em; opacity: 0.8; margin-bottom: 0.5em;">{entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+	<SecondaryBanner 
+		title={entry.data.title}
+		styleClass="alt style2"
+		background={`url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E"), linear-gradient(135deg, #34495e, #2c3e50)`}
+	>
+        <p style="font-size: 0.9em; opacity: 0.8; margin-bottom: 0.5em;">{entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         {entry.data.category && (
-            <div class="categories" style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 0.5em;">
-                <span class="category-badge" style={`display: inline-block; background: ${categoryColors[entry.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em;`}>{entry.data.category}</span>
+            <div class="categories" style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 0.5em; margin-bottom: 0.5em;">
+                {entry.data.category.map(cat => (
+                    <span class="category-badge" style={`display: inline-block; background: ${categoryColors[cat] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.8em;`}>{cat}</span>
+                ))}
             </div>
         )}
     </SecondaryBanner>
@@ -38,8 +46,9 @@ const defaultColor = "#95a5a6";
 		<section>
 			<div class="inner">
 				<Content />
-                <hr />
-                <a href="/newsletters" class="button">Back to Newsletters</a>
+				<div style="margin-top: 3em;">
+					<a href="/newsletters" class="button small icon solid fa-arrow-left">Back to Newsletters</a>
+				</div>
 			</div>
 		</section>
 	</div>

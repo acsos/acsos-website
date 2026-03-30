@@ -2,12 +2,13 @@
 interface Props {
 	title: string;
 	styleClass?: string;
+	background?: string;
 }
 
-const { title, styleClass = 'alt style2' } = Astro.props;
+const { title, styleClass = 'alt style2', background } = Astro.props;
 ---
 
-<section id="banner" class={styleClass}>
+<section id="banner" class={`${styleClass} ${background ? 'has-custom-bg' : ''}`} style={background ? `background-image: ${background}; background-size: cover; background-position: center;` : ''}>
 	<div class="inner">
 		<header class="major">
 			<h1>{title}</h1>
@@ -15,3 +16,11 @@ const { title, styleClass = 'alt style2' } = Astro.props;
 		<slot />
 	</div>
 </section>
+
+<style is:global>
+	/* Make the heavy template overlay semi-transparent so the custom gradient/pattern is visible but text remains readable */
+	#banner.has-custom-bg:after {
+		background-color: rgba(36, 41, 67, 0.4) !important;
+		opacity: 1 !important;
+	}
+</style>

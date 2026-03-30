@@ -1,6 +1,7 @@
 ---
 interface TileItem {
-	image: string;
+	image?: string;
+	background?: string;
 	title: string;
 	description: string;
 	link: string;
@@ -16,10 +17,21 @@ const { tiles } = Astro.props;
 
 <section id="one" class="tiles">
 	{tiles.map((tile) => (
-		<article>
-			<span class="image">
-				<img src={tile.image} alt="" />
-			</span>
+		<article 
+			style={tile.background ? `--tile-bg: ${tile.background};` : ''} 
+			class={tile.background ? 'has-custom-bg' : ''}
+		>
+			{/* Render dummy image so main.js scripts don't break with undefined src */}
+			{tile.background ? (
+				<span class="image">
+					<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" />
+				</span>
+			) : tile.image ? (
+				<span class="image">
+					<img src={tile.image} alt="" />
+				</span>
+			) : null}
+			
 			<header class="major">
 				<h3>
 					<a 
@@ -35,3 +47,24 @@ const { tiles } = Astro.props;
 		</article>
 	))}
 </section>
+
+<style is:global>
+	/* Use CSS variable to override background-image, bypassing jQuery inline styles */
+	.tiles article.has-custom-bg {
+		background-image: var(--tile-bg) !important;
+		background-size: cover !important;
+		background-position: center !important;
+	}
+	
+	/* Replace the heavily colored HTML5UP overlay with a semi-transparent dark overlay so text is readable but background pattern is visible */
+	.tiles article.has-custom-bg:before {
+		background-color: rgba(36, 41, 67, 0.4) !important;
+		opacity: 1 !important;
+		transition: opacity 0.5s ease;
+	}
+	
+	/* Brighten up the tile on hover by making the dark overlay transparent */
+	.tiles article.has-custom-bg:hover:before {
+		opacity: 0 !important;
+	}
+</style>

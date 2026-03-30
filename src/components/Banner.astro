@@ -4,12 +4,13 @@ interface Props {
 	subtitle?: string;
 	styleClass?: string;
 	showSocialLinks?: boolean;
+	background?: string;
 }
 
-const { title, subtitle, styleClass = '', showSocialLinks = false } = Astro.props;
+const { title, subtitle, styleClass = '', showSocialLinks = false, background } = Astro.props;
 ---
 
-<section id="banner" class:list={['major', styleClass]}>
+<section id="banner" class:list={['major', styleClass]} style={background ? `background-image: ${background}; background-size: cover; background-position: center;` : ''}>
 	<div class="inner">
 		<header class="major">
 			<h1>{title}</h1>

@@ -66,7 +66,9 @@ const newsletters = defineCollection({
     description: z.string(),
     date: z.date(),
     image: z.string().optional(),
-    category: z.string(),
+    words: z.array(z.string()).optional(),
+    weight: z.array(z.number()).optional(),
+    category: z.union([z.string(), z.array(z.string())]).optional().transform(val => Array.isArray(val) ? val : (val ? [val] : [])),
   }),
 });
 

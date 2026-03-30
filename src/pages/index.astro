@@ -5,63 +5,73 @@ import Tiles from '../components/Tiles.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config/site';
 
-const newsletters = siteConfig.showNews 
+const newsletters = siteConfig.showNewsletters 
 	? (await getCollection('newsletters'))
 		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 		.slice(0, 3)
 	: [];
 
 const categoryColors = {
-  "Conference news and updates": "#2e86de",
+  "conference": "#2e86de",
   "News from the SC": "#10ac84",
-  "Highlights/milestones of people in ACSOS": "#8e44ad",
-  "Recent publications": "#e67e22",
+  "milestone": "#8e44ad",
+  "publication": "#e67e22",
+  "funding": "#f1c40f",
   "Interviews": "#1abc9c",
-  "Search and find": "#e74c3c"
+  "Search and find": "#e74c3c",
+  "Community news": "#f39c12",
+  "event": "#e84393"
 };
 const defaultColor = "#95a5a6";
 
+const patterns = {
+    dots: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
+    hex: `url("data:image/svg+xml,%3Csvg width='28' height='49' viewBox='0 0 28 49' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.65V49h-2z'/%3E%3C/g%3E%3C/svg%3E")`,
+    squares: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+    plus: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+};
+
 const tiles = [
 	{
-		image: '/images/design/pic01.jpg',
+		background: `${patterns.hex}, linear-gradient(135deg, #1abc9c, #16a085)`,
 		title: 'Next Conference',
 		description: 'Cesena, Italy, Sept. 7th to Sept. 11th, 2026',
 		link: 'https://2026.acsos.org/',
 		external: true
 	},
 	{
-		image: '/images/design/pic02.jpg',
+		background: `${patterns.dots}, linear-gradient(135deg, #3498db, #2980b9)`,
 		title: 'The Conference Series',
 		description: 'The history of conferences',
 		link: '/series'
 	},
 	{
-		image: '/images/design/pic03.jpg',
+		background: `${patterns.squares}, linear-gradient(135deg, #9b59b6, #8e44ad)`,
 		title: 'Conference Proceedings',
 		description: 'The history of proceedings',
 		link: '/proceedings'
 	},
 	{
-		image: '/images/design/pic04.jpg',
+		background: `${patterns.plus}, linear-gradient(135deg, #f1c40f, #f39c12)`,
 		title: 'Conference Awards',
 		description: 'The Award Recipients',
 		link: '/awards'
 	},
 	{
-		image: '/images/design/pic05.jpg',
+		background: `${patterns.hex}, linear-gradient(135deg, #e67e22, #d35400)`,
 		title: 'Hosting ACSOS',
 		description: 'Hosting Future Conferences',
 		link: '/hosting'
 	},
 	{
-		image: '/images/design/pic06.jpg',
+		background: `${patterns.dots}, linear-gradient(135deg, #e74c3c, #c0392b)`,
 		title: 'Leadership',
 		description: 'Steering Committee and Advisory Board',
 		link: '/leadership'
 	},
-	...(siteConfig.showNews ? [{
-		image: '/images/design/pic07.jpg',
-		title: 'News',
+	...(siteConfig.showNewsletters ? [{
+		background: `${patterns.squares}, linear-gradient(135deg, #34495e, #2c3e50)`,
+		title: 'Newsletters',
 		description: 'Latest updates and announcements',
 		link: '/newsletters'
 	}] : [])
@@ -78,6 +88,7 @@ const tiles = [
 	<Banner 
 		title="Autonomic Computing and Self-Organizing Systems (ACSOS)"
 		showSocialLinks={true}
+		background={`${patterns.hex}, linear-gradient(135deg, #2b5876 0%, #4e4376 100%)`}
 	/>
 
 	<!-- Main -->
@@ -130,43 +141,5 @@ const tiles = [
 				</p>
 			</div>
 		</section>
-
-		<!-- Newsletters Section -->
-		{siteConfig.showNews && (
-		<section id="news-main">
-			<div class="inner">
-				<header class="major">
-					<h2>Recent News</h2>
-				</header>
-				<div class="row gtr-uniform">
-					{newsletters.map((newsletter) => (
-						<div class="col-4 col-12-medium">
-							<div style="height: 100%; display: flex; flex-direction: column;">
-								<span class="image fit">
-									<img src={newsletter.data.image || '/images/design/pic06.jpg'} alt="" style="height: 250px; object-fit: cover;" />
-								</span>
-								<h3 style="min-height: 3em; margin-bottom: 0.5em;">{newsletter.data.title}</h3>
-								<p style="font-style: italic; color: #666; margin-bottom: 0.25em; line-height: 1.2;">
-									{newsletter.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-								</p>
-                                <div class="categories" style="margin-bottom: 0.5em; line-height: 1.2; min-height: 2em;">
-                                    {newsletter.data.category && (
-                                        <span class="category-badge" style={`display: inline-block; background: ${categoryColors[newsletter.data.category] || defaultColor}; color: #fff; padding: 0.2em 0.6em; border-radius: 4px; font-size: 0.7em;`}>{newsletter.data.category}</span>
-                                    )}
-                                </div>
-								<p style="flex-grow: 1;">{newsletter.data.description}</p>
-								<ul class="actions">
-									<li><a href={`/newsletters/${newsletter.slug}`} class="button">Read More</a></li>
-								</ul>
-							</div>
-						</div>
-					))}
-				</div>
-				<ul class="actions" style="margin-top: 2em;">
-					<li><a href="/newsletters" class="button primary">View All News</a></li>
-				</ul>
-			</div>
-		</section>
-		)}
 	</div>
 </BaseLayout>
