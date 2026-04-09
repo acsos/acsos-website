@@ -8,11 +8,15 @@ image: "/images/design/pic08.jpg"
 ---
 
 Dear ACSOS Community,  
-We are happy to announce and share the first edition of the ACSOS Community Newsletter. This newsletter is dedicated to regularly sharing news, updates on the upcoming conference, ideas, challenges, and collaboration opportunities in the ACSOS community, and to shorten the waiting time between conferences.
+We are happy to announce and share the first edition of the ACSOS Community Newsletter. This newsletter is dedicated to regularly sharing news, updates on the upcoming conference, ideas, challenges, and collaboration opportunities in the ACSOS community.
 
+You, as part of the ACSOS community, are invited to submit content for the ACSOS Newsletter via the ACSOS Discord server ([https://discord.gg/XpGQhQMF3D](https://discord.gg/XpGQhQMF3D)). The newsletter editorial team will collect submissions and share them regularly across our platforms (see [https://linktr.ee/acsosconf](https://linktr.ee/acsosconf) for our channels).
+
+Best wishes and enjoy reading\!  
+The ACSOS 2026 Community Building Chairs  
 ---
 
-## 🔜 Conference News: ACSOS 2026 Call for Papers published
+# 🔜 Conference News: ACSOS 2026 Call for Papers published
 
 The ACSOS 2026 Call for Papers was recently published. 
 
@@ -33,14 +37,11 @@ Looking for collaborations or want to get in contact with the chairs? Join the d
 
 # 📅 ACSOS Speaker Seminar Series: Dr. Peter Lewis at The Ohio State University
 
-We're pleased to announce the first 2026 ACSOS Seminar with Dr. Peter Lewis. The event will be hybrid with both in-person and Zoom options. 
+On April 2, 2026, we concluded the first session in our ACSOS Seminar Series, hosted by the Translational Data Analytics Institute on The Ohio State University Campus.
 
-Title: Reflective Social Intelligence for Autonomous Agents  
-Date & Time: Thursday, April 2, 2026 · 10:00–11:00 AM (ET)/3:00-4:00 PM (GMT) 
+We were delighted to kick off the series with Peter Lewis, who delivered an engaging talk on Reflective Social Intelligence for Autonomous Agents. The session highlighted the importance of explicitly modeling social phenomena, concepts, and emergent dynamics within autonomous systems, such that said systems may become aware and act intentionally because of said knowledge.
 
-Please RVSP here: [https://osu.az1.qualtrics.com/jfe/form/SV\_8GEUyNNNX0wIRVk](https://osu.az1.qualtrics.com/jfe/form/SV_8GEUyNNNX0wIRVk)
-
-Event info: [https://tdai.osu.edu/events/tdai-speaker-series-reflective-social-intelligence-autonomous-agents](https://tdai.osu.edu/events/tdai-speaker-series-reflective-social-intelligence-autonomous-agents)
+Thank you to everyone who joined us and contributed to such a lively and insightful event. This is just the beginning—stay tuned as we prepare to announce upcoming talks in the seminar series. We look forward to seeing you at future events\!
 
 If you are interested in the event or want to get in touch with the organizers, join the discussion on Discord: [https://discord.com/channels/1162311213162704916/1483537512956690442](https://discord.com/channels/1162311213162704916/1483537512956690442)
 
