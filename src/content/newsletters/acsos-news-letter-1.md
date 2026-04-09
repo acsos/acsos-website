@@ -14,6 +14,7 @@ You, as part of the ACSOS community, are invited to submit content for the ACSOS
 
 Best wishes and enjoy reading\!  
 The ACSOS 2026 Community Building Chairs  
+
 ---
 
 # 🔜 Conference News: ACSOS 2026 Call for Papers published
