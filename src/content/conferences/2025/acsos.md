@@ -5,6 +5,7 @@ name: "ACSOS 2025"
 location: "Tokyo, Japan"
 dates: "September 29 - October 3, 2025"
 website: "https://2025.acsos.org/"
+acceptanceRate: "20%"
 series: "ACSOS"
 generalChairs:
   - name: "Kenji Tei"
