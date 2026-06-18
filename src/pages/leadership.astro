@@ -11,7 +11,16 @@ console.log('Sample member:', allLeadership[0]?.data);
 
 const steeringCommittee = allLeadership
 	.filter(member => member.data.groups.includes('steering'))
-	.sort((a, b) => a.data.order - b.data.order);
+	.sort((a, b) => {
+		const roleA = a.data.role || '';
+		const roleB = b.data.role || '';
+		
+		if (roleA && !roleB) return -1;
+		if (!roleA && roleB) return 1;
+		if (roleA !== roleB) return roleA.localeCompare(roleB);
+		return a.data.name.localeCompare(b.data.name);
+	});
+
 
 const advisoryBoard = allLeadership
 	.filter(member => member.data.groups.includes('advisory'))
