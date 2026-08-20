@@ -8,9 +8,19 @@
 	--color-memorial-tile-start: oklch(0.48 0.045 272);
 	--color-memorial-tile-end: oklch(0.33 0.05 272);
 	--color-focus: oklch(0.9 0.13 197);
+	--color-series-paper: oklch(0.295 0.055 276);
+	--color-series-surface: oklch(0.325 0.052 276);
+	--color-series-ink: oklch(0.98 0.008 255);
+	--color-series-muted: oklch(0.79 0.025 262);
+	--color-series-rule: oklch(0.48 0.04 274);
+	--color-series-rule-strong: oklch(0.68 0.035 268);
+	--color-series-accent: oklch(0.87 0.105 200);
+	--color-series-banner-start: oklch(0.68 0.13 238);
+	--color-series-banner-end: oklch(0.58 0.14 245);
 
 	--font-display: "Source Sans Pro", Helvetica, sans-serif;
 	--font-body: "Source Sans Pro", Helvetica, sans-serif;
+	--font-series-display: "Audiowide", "Source Sans Pro", Helvetica, sans-serif;
 
 	--space-2xs: 0.25rem;
 	--space-xs: 0.5rem;
@@ -25,18 +35,34 @@
 	--text-sm: 0.875rem;
 	--text-base: 1rem;
 	--text-md: 1.25rem;
+	--text-lg: 1.5625rem;
 	--text-2xl: clamp(2rem, 4vw, 3.05rem);
 	--text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+	--text-section: clamp(2.25rem, 5vw, 4rem);
+	--text-year: clamp(1.5rem, 4vw, 2.25rem);
+
+	--weight-bold: 700;
+	--weight-regular: 400;
+	--tracking-tight: -0.025em;
+	--tracking-label: 0.1em;
+	--leading-display: 1.05;
+	--leading-heading: 1.2;
+	--leading-body: 1.55;
 
 	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 	--ease-in: cubic-bezier(0.7, 0, 0.84, 0);
 	--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 	--dur-short: 160ms;
+	--dur-reduced: 100ms;
 
 	--rule-hairline: 1px;
+	--rule-strong: 2px;
+	--rule-accent: 3px;
 	--rule-focus: 3px;
 	--rule-content-max: 72rem;
 	--rule-prose-max: 65ch;
+	--touch-target: 3rem;
+	--opacity-disabled: 0.55;
 
 	--radius-none: 0;
 }

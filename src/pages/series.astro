@@ -2,253 +2,245 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SecondaryBanner from '../components/SecondaryBanner.astro';
 import { getCollection } from 'astro:content';
+import '../../tokens.css';
 
-// Get all conferences and sort by year (newest first)
 const allConferences = (await getCollection('conferences'))
 	.sort((a, b) => b.data.year - a.data.year);
 
-// Group by series
-const acsos = allConferences.filter(conf => conf.data.series === 'ACSOS');
-const icac = allConferences.filter(conf => conf.data.series === 'ICAC');
-const saso = allConferences.filter(conf => conf.data.series === 'SASO');
+const acsos = allConferences.filter((conference) => conference.data.series === 'ACSOS');
+const icac = allConferences.filter((conference) => conference.data.series === 'ICAC');
+const saso = allConferences.filter((conference) => conference.data.series === 'SASO');
+
+const seriesGroups = [
+	{
+		id: 'acsos',
+		name: 'ACSOS',
+		status: 'Current series',
+		years: '2020–Present',
+		description: 'The unified conference on autonomic computing and self-adaptive and self-organizing systems.',
+		conferences: acsos,
+		current: true,
+	},
+	{
+		id: 'icac',
+		name: 'ICAC',
+		status: 'Foundation series',
+		years: '2004–2019',
+		description: 'IEEE International Conference on Autonomic Computing.',
+		conferences: icac,
+		current: false,
+	},
+	{
+		id: 'saso',
+		name: 'SASO',
+		status: 'Foundation series',
+		years: '2007–2019',
+		description: 'IEEE International Conference on Self-Adaptive and Self-Organizing Systems.',
+		conferences: saso,
+		current: false,
+	},
+];
+
+const ordinal = (edition: number) => {
+	const remainder100 = edition % 100;
+	if (remainder100 >= 11 && remainder100 <= 13) return `${edition}th`;
+
+	switch (edition % 10) {
+		case 1: return `${edition}st`;
+		case 2: return `${edition}nd`;
+		case 3: return `${edition}rd`;
+		default: return `${edition}th`;
+	}
+};
 ---
 
-<BaseLayout 
-	title="ACSOS Conference Series" 
+<BaseLayout
+	title="ACSOS Conference Series"
 	currentPage="series"
 	description="The history of ACSOS conferences"
 	headerStyle="alt style6"
 >
-	<!-- Banner -->
-	<SecondaryBanner 
-        title="The Conference Series" 
-        styleClass="alt style6"
-        background={`url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, #3498db, #2980b9)`}
-    >
+	<SecondaryBanner
+		title="The Conference Series"
+		styleClass="alt style6"
+		background="linear-gradient(135deg, var(--color-series-banner-start), var(--color-series-banner-end))"
+	>
 		<p>
-			The ACSOS conference was founded in 2020 as a merger of the IEEE International Conference 
-			on Autonomic Computing (ICAC) and the IEEE International Conference on Self-Adaptive and 
+			The ACSOS conference was founded in 2020 as a merger of the IEEE International Conference
+			on Autonomic Computing (ICAC) and the IEEE International Conference on Self-Adaptive and
 			Self-Organizing Systems (SASO).
 		</p>
 	</SecondaryBanner>
 
-	<!-- Main Content -->
-	<div id="main">
-		<section>
-			<div class="inner">
-				<!-- ACSOS Conferences -->
-				<h2>ACSOS Conferences (2020-Present)</h2>
-				<div class="table-wrapper">
-					<table>
-						<thead>
-							<tr>
-								<th>Conference</th>
-								<th>Location</th>
-								<th>Acceptance Rate</th>
-							</tr>
-						</thead>
-						<tbody>
-							{acsos.map((conf) => (
-								<>
-									<tr>
-										<td>
-											The {conf.data.edition}{conf.data.edition === 1 ? 'st' : conf.data.edition === 2 ? 'nd' : conf.data.edition === 3 ? 'rd' : 'th'} ACSOS conference (
-											{conf.data.website ? (
-												<a href={conf.data.website} target="_blank">{conf.data.name}</a>
-											) : (
-												<a href={`/conferences/${conf.data.year}`}>{conf.data.name}</a>
-											)}
-											)
-										</td>
-										<td>{conf.data.location}</td>
-										<td>{conf.data.acceptanceRate || ''}</td>
-									</tr>
-									<tr>
-										<td colspan="3" id="series-chair-formatting">
-											<b>General Chairs:</b>
-											<ul>
-												{conf.data.generalChairs.map((chair) => (
-													<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-												))}
-											</ul>
-											{conf.data.programChairs && conf.data.programChairs.length > 0 && (
-												<>
-													<b>Program Chairs:</b>
+	<main id="main" class="series-main">
+		<section class="conference-archive">
+			<div class="inner series-shell">
+				<nav class="series-index" aria-label="Conference series on this page">
+					{seriesGroups.map((group) => (
+						<a href={`#${group.id}`}>
+							<strong>{group.name}</strong>
+							<span>{group.years}</span>
+						</a>
+					))}
+				</nav>
+
+				{seriesGroups.map((group, index) => (
+					<>
+						{index === 1 && (
+							<aside class="merger-note" aria-label="Conference series merger">
+								<strong>2020</strong>
+								<p>ICAC and SASO came together to form the ACSOS conference series.</p>
+							</aside>
+						)}
+
+						<section id={group.id} class:list={['series-section', group.current && 'series-section--current']} aria-labelledby={`${group.id}-title`}>
+							<header class="series-heading">
+								<div class="series-heading__copy">
+									<h2 id={`${group.id}-title`}>{group.name}</h2>
+									<p>{group.description}</p>
+								</div>
+								<dl class="series-facts">
+									<div><dt>Status</dt><dd>{group.status.replace(' series', '')}</dd></div>
+									<div><dt>Years</dt><dd>{group.years}</dd></div>
+									<div><dt>Editions</dt><dd>{group.conferences.length}</dd></div>
+								</dl>
+							</header>
+
+							<div class="conference-grid">
+								{group.conferences.map((conference) => (
+									<article class="conference-card">
+										<header class="conference-card__header">
+											<time datetime={String(conference.data.year)}>{conference.data.year}</time>
+											<div class="conference-card__identity">
+												<p>{ordinal(conference.data.edition)} edition</p>
+												<h3>
+													<a href={conference.data.website || `/conferences/${conference.data.year}`} target={conference.data.website ? '_blank' : undefined} rel={conference.data.website ? 'noopener noreferrer' : undefined}>
+														{conference.data.name}
+													</a>
+												</h3>
+											</div>
+										</header>
+
+										<dl class="conference-meta">
+											<div><dt>Location</dt><dd>{conference.data.location}</dd></div>
+											<div><dt>Dates</dt><dd>{conference.data.dates}</dd></div>
+											{conference.data.acceptanceRate && <div><dt>Acceptance</dt><dd>{conference.data.acceptanceRate}</dd></div>}
+										</dl>
+
+										<details class="conference-chairs">
+											<summary>Conference chairs</summary>
+											<div class="conference-chairs__content">
+												<div>
+													<h4>General chairs</h4>
 													<ul>
-														{conf.data.programChairs.map((chair) => (
-															<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
+														{conference.data.generalChairs.map((chair) => (
+															<li><strong>{chair.name}</strong><span>{chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</span></li>
 														))}
 													</ul>
-												</>
-											)}
-										</td>
-									</tr>
-								</>
-							))}
-						</tbody>
-					</table>
-				</div>
-
-				{/* Two-column layout for ICAC and SASO side-by-side */}
-				{icac.length > 0 && saso.length > 0 && (
-					<>
-						<h2 style="margin-top: 3em;">ICAC and SASO Conferences (Pre-Merger)</h2>
-						<div class="pre-merger-tables">
-							{/* ICAC Table */}
-							<div class="conference-table">
-								<h3>ICAC Conferences</h3>
-								<div class="table-wrapper">
-									<table>
-										<thead>
-											<tr>
-												<th>Conference</th>
-												<th>Location</th>
-												<th>Acceptance Rate</th>
-											</tr>
-										</thead>
-										<tbody>
-											{icac.map((icacConf) => (
-												<>
-													<tr>
-														<td>
-															{icacConf.data.website ? (
-																<a href={icacConf.data.website} target="_blank">{icacConf.data.name}</a>
-															) : (
-																<a href={`/conferences/${icacConf.data.year}`}>{icacConf.data.name}</a>
-															)}
-														</td>
-														<td>{icacConf.data.location}</td>
-														<td>{icacConf.data.acceptanceRate || ''}</td>
-													</tr>
-													<tr>
-														<td colspan="3" id="series-chair-formatting">
-															<b>General Chairs:</b>
-															<ul>
-																{icacConf.data.generalChairs.map((chair) => (
-																	<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-																))}
-															</ul>
-															{icacConf.data.programChairs && icacConf.data.programChairs.length > 0 && (
-																<>
-																	<b>Program Chairs:</b>
-																	<ul>
-																		{icacConf.data.programChairs.map((chair) => (
-																			<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-																		))}
-																	</ul>
-																</>
-															)}
-														</td>
-													</tr>
-												</>
-											))}
-										</tbody>
-									</table>
-								</div>
+												</div>
+												{conference.data.programChairs && conference.data.programChairs.length > 0 && (
+													<div>
+														<h4>Program chairs</h4>
+														<ul>
+															{conference.data.programChairs.map((chair) => (
+																<li><strong>{chair.name}</strong><span>{chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</span></li>
+															))}
+														</ul>
+													</div>
+												)}
+											</div>
+										</details>
+									</article>
+								))}
 							</div>
-
-							{/* SASO Table */}
-							<div class="conference-table">
-								<h3>SASO Conferences</h3>
-								<div class="table-wrapper">
-									<table>
-										<thead>
-											<tr>
-												<th>Conference</th>
-												<th>Location</th>
-												<th>Acceptance Rate</th>
-											</tr>
-										</thead>
-										<tbody>
-											{saso.map((sasoConf) => (
-												<>
-													<tr>
-														<td>
-															{sasoConf.data.website ? (
-																<a href={sasoConf.data.website} target="_blank">{sasoConf.data.name}</a>
-															) : (
-																<a href={`/conferences/${sasoConf.data.year}`}>{sasoConf.data.name}</a>
-															)}
-														</td>
-														<td>{sasoConf.data.location}</td>
-														<td>{sasoConf.data.acceptanceRate || ''}</td>
-													</tr>
-													<tr>
-														<td colspan="3" id="series-chair-formatting">
-															<b>General Chairs:</b>
-															<ul>
-																{sasoConf.data.generalChairs.map((chair) => (
-																	<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-																))}
-															</ul>
-															{sasoConf.data.programChairs && sasoConf.data.programChairs.length > 0 && (
-																<>
-																	<b>Program Chairs:</b>
-																	<ul>
-																		{sasoConf.data.programChairs.map((chair) => (
-																			<li>{chair.name}, {chair.affiliation}{chair.country ? `, ${chair.country}` : ''}</li>
-																		))}
-																	</ul>
-																</>
-															)}
-														</td>
-													</tr>
-												</>
-											))}
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
+						</section>
 					</>
-				)}
-
+				))}
 			</div>
 		</section>
-	</div>
+	</main>
 </BaseLayout>
 
 <style>
-	/* Make the pre-merger table responsive on mobile */
-	.pre-merger-tables {
-		display: flex;
-		flex-direction: row;
-		gap: 2em;
+	/* Hallmark · genre: editorial · macrostructure: Catalogue · theme: ACSOS/Forty (preserved) · enrichment: none · nav/footer: preserved
+	 * audience: ACSOS community and conference-history visitors · use: scan and open an edition · tone: academic editorial
+	 * pre-emit critique: P4 H5 E4 S5 R5 V4
+	 */
+	:global(html), :global(body) { min-width: 0; overflow-x: clip; }
+
+	.series-main { background: var(--color-series-paper); color: var(--color-series-ink); font-family: var(--font-body); font-size: var(--text-base); }
+	.series-shell { display: grid; gap: var(--space-3xl); }
+
+	.series-index { display: grid; border-block: var(--rule-hairline) solid var(--color-series-rule); }
+	.series-index a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); min-height: var(--touch-target); padding: var(--space-md) 0; border-bottom: var(--rule-hairline) solid var(--color-series-rule); color: var(--color-series-ink); text-decoration: none; white-space: nowrap; transition: color var(--dur-short) var(--ease-out); }
+	.series-index a:last-child { border-bottom: 0; }
+	.series-index strong { color: inherit; font-family: var(--font-series-display); font-size: var(--text-base); font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); }
+	.series-index span { color: var(--color-series-muted); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+	.series-index a:hover { color: var(--color-series-accent) !important; }
+	.series-index a:active, .conference-card h3 a:active, .conference-chairs summary:active { color: var(--color-series-accent) !important; }
+	.series-index a[aria-disabled="true"], .conference-card a[aria-disabled="true"], .conference-chairs summary[aria-disabled="true"] { cursor: not-allowed; opacity: var(--opacity-disabled); pointer-events: none; }
+	.series-index a:focus-visible, .conference-card a:focus-visible, .conference-chairs summary:focus-visible { outline: var(--rule-focus) solid var(--color-focus); outline-offset: var(--space-2xs); }
+
+	.series-section { display: grid; gap: var(--space-2xl); scroll-margin-top: var(--space-3xl); min-width: 0; }
+	.series-heading { display: grid; gap: var(--space-xl); padding-top: var(--space-lg); border-top: var(--rule-strong) solid var(--color-series-rule-strong); }
+	.series-heading__copy { min-width: 0; }
+	.series-heading h2 { margin: 0 0 var(--space-sm); color: var(--color-series-ink); font-family: var(--font-series-display); font-size: var(--text-section); font-style: normal; font-weight: var(--weight-regular); letter-spacing: var(--tracking-tight); line-height: var(--leading-display); overflow-wrap: anywhere; min-width: 0; }
+	.series-heading__copy > p:last-child { max-width: var(--rule-prose-max); margin: 0; color: var(--color-series-muted); line-height: var(--leading-body); }
+
+	.series-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin: 0; }
+	.series-facts div:first-child { grid-column: 1 / -1; }
+	.series-facts div { display: grid; gap: var(--space-xs); padding-block: var(--space-md); border-block: var(--rule-hairline) solid var(--color-series-rule); }
+	.series-facts dt, .conference-meta dt { color: var(--color-series-muted); font-size: var(--text-sm); font-weight: var(--weight-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+	.series-facts dd { margin: 0; color: var(--color-series-ink); font-size: var(--text-md); font-variant-numeric: tabular-nums; }
+
+	.conference-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); min-width: 0; }
+	.conference-card { display: grid; align-content: start; gap: var(--space-lg); min-width: 0; padding: var(--space-lg); border: var(--rule-hairline) solid var(--color-series-rule); background: var(--color-series-surface); }
+	.series-section--current .conference-card { border-top-color: var(--color-series-accent); border-top-width: var(--rule-accent); }
+	.conference-card__header { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--space-md); }
+	.conference-card time { color: var(--color-series-accent); font-family: var(--font-series-display); font-size: var(--text-year); font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
+	.conference-card__identity { min-width: 0; }
+	.conference-card__identity p { margin: 0 0 var(--space-2xs); color: var(--color-series-muted); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+	.conference-card h3 { margin: 0; font-family: var(--font-body); font-size: var(--text-lg); font-style: normal; font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight); line-height: var(--leading-heading); overflow-wrap: anywhere; min-width: 0; }
+	.conference-card h3 a { color: var(--color-series-ink); text-decoration: underline; text-decoration-color: var(--color-series-rule-strong); text-decoration-thickness: var(--rule-hairline); text-underline-offset: var(--space-2xs); }
+	.conference-card h3 a:hover { color: var(--color-series-accent) !important; text-decoration-color: currentColor; }
+
+	.conference-meta { display: grid; gap: var(--space-md); margin: 0; padding-block: var(--space-md); border-block: var(--rule-hairline) solid var(--color-series-rule); }
+	.conference-meta div { display: grid; grid-template-columns: minmax(5.75rem, auto) minmax(0, 1fr); gap: var(--space-md); align-items: baseline; }
+	.conference-meta dd { margin: 0; color: var(--color-series-ink); line-height: var(--leading-body); }
+
+	.conference-chairs { min-width: 0; }
+	.conference-chairs summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); min-height: var(--touch-target); color: var(--color-series-ink); cursor: pointer; font-weight: var(--weight-bold); list-style: none; white-space: nowrap; }
+	.conference-chairs summary::-webkit-details-marker { display: none; }
+	.conference-chairs summary:hover { color: var(--color-series-accent); }
+	.conference-chairs summary::after { content: '+'; color: var(--color-series-accent); font-size: var(--text-md); line-height: 1; }
+	.conference-chairs[open] summary::after { content: '−'; }
+	.conference-chairs__content { display: grid; gap: var(--space-lg); padding-top: var(--space-md); }
+	.conference-chairs__content h4 { margin: 0 0 var(--space-sm); color: var(--color-series-muted); font-size: var(--text-sm); font-style: normal; font-weight: var(--weight-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+	.conference-chairs__content ul { display: grid; gap: var(--space-md); margin: 0; padding: 0; list-style: none; }
+	.conference-chairs__content li { display: grid; gap: var(--space-2xs); line-height: var(--leading-body); }
+	.conference-chairs__content li strong { color: var(--color-series-ink); }
+	.conference-chairs__content li span { color: var(--color-series-muted); font-size: var(--text-sm); }
+
+	.merger-note { display: grid; gap: var(--space-md); padding: var(--space-xl) 0 var(--space-lg); border-top: var(--rule-hairline) solid var(--color-series-rule); }
+	.merger-note strong { color: var(--color-series-accent); font-family: var(--font-series-display); font-size: var(--text-section); font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
+	.merger-note p { max-width: var(--rule-prose-max); margin: 0; color: var(--color-series-ink); font-size: var(--text-md); line-height: var(--leading-body); }
+
+	@media (min-width: 40rem) {
+		.series-index { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+		.series-index a { padding-inline: var(--space-lg); border-bottom: 0; border-inline-end: var(--rule-hairline) solid var(--color-series-rule); }
+		.series-index a:first-child { padding-inline-start: 0; }
+		.series-index a:last-child { padding-inline-end: 0; border-inline-end: 0; }
+		.series-heading, .merger-note { grid-template-columns: minmax(0, 1.6fr) minmax(15rem, 0.8fr); align-items: start; }
+		.series-facts { align-self: end; }
+		.merger-note p { padding-bottom: var(--space-xs); }
 	}
 
-	.pre-merger-tables .conference-table {
-		flex: 1;
+	@media (min-width: 60rem) {
+		.conference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		.conference-chairs__content { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	}
 
-	.pre-merger-tables .conference-table h3 {
-		margin-bottom: 1em;
-	}
-
-	/* On mobile, stack the tables vertically */
-	@media screen and (max-width: 980px) {
-		.pre-merger-tables {
-			flex-direction: column;
-		}
-
-		.pre-merger-tables .conference-table {
-			width: 100%;
-		}
-	}
-
-	/* Ensure table wrapper allows horizontal scroll if needed */
-	.table-wrapper {
-		overflow-x: auto;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	@media screen and (max-width: 736px) {
-		.table-wrapper table {
-			font-size: 0.85em;
-		}
-
-		.table-wrapper table td,
-		.table-wrapper table th {
-			padding: 0.5em;
-		}
+	@media (prefers-reduced-motion: reduce) {
+		.series-index a { transition-duration: var(--dur-reduced); }
 	}
 </style>
