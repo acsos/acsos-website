@@ -72,9 +72,30 @@ const newsletters = defineCollection({
   }),
 });
 
+const inMemoriam = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    lifespan: z.string(),
+    role: z.string().optional(),
+    affiliation: z.string().optional(),
+    image: z.string(),
+    imageAlt: z.string(),
+    photoCredit: z.string().optional(),
+    photoSource: z.string().url().optional(),
+    published: z.boolean().default(true),
+    order: z.number().default(999),
+    links: z.array(z.object({
+      label: z.string(),
+      url: z.string(),
+    })).default([]),
+  }),
+});
+
 export const collections = {
   conferences,
   awards,
   leadership,
   newsletters,
+  'in-memoriam': inMemoriam,
 };

@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SecondaryBanner from '../components/SecondaryBanner.astro';
+import { getCollection, render } from 'astro:content';
+
+const entries = (await getCollection('in-memoriam'))
+	.filter((entry) => entry.data.published)
+	.sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+
+const memorials = await Promise.all(entries.map(async (entry) => {
+	const { Content } = await render(entry);
+	return { ...entry, Content };
+}));
+---
+
+<BaseLayout
+	title="In Memoriam | ACSOS"
+	description="Remembering members of the ACSOS community and their contributions."
+	currentPage="in-memoriam"
+	headerStyle="alt style6"
+>
+	<SecondaryBanner
+		title="In Memoriam"
+		styleClass="alt style6"
+		background={`url("data:image/svg+xml,%3Csvg width='28' height='49' viewBox='0 0 28 49' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.65V49h-2z'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, var(--color-memorial-tile-start), var(--color-memorial-tile-end))`}
+	>
+		<p>We remember colleagues whose ideas, generosity, and service helped shape the ACSOS community.</p>
+	</SecondaryBanner>
+
+	<div id="main">
+		{memorials.map(({ id, data, Content }) => (
+			<section id={id}>
+				<div class="inner">
+					<div class="row gtr-50 gtr-uniform">
+						<div class="col-3 col-4-medium col-12-small">
+							<figure class="memorial-portrait">
+								<span class="image fit">
+									<img
+										src={data.image}
+										alt={data.imageAlt}
+										width="200"
+										height="250"
+										loading="eager"
+									/>
+								</span>
+								{data.photoCredit && (
+									<figcaption>
+										Photo: {data.photoSource ? (
+											<a href={data.photoSource}>{data.photoCredit}</a>
+										) : data.photoCredit}
+									</figcaption>
+								)}
+							</figure>
+						</div>
+
+						<div class="col-9 col-8-medium col-12-small">
+							<header class="major">
+							<h2>{data.name}</h2>
+							</header>
+
+							<p class="memorial-meta">
+								<strong>{data.lifespan}</strong>
+								{data.role && <><br />{data.role}</>}
+								{data.affiliation && <><br />{data.affiliation}</>}
+							</p>
+
+							<Content />
+
+							{data.links.length > 0 && (
+								<ul class="actions">
+									{data.links.map((link) => (
+										<li><a href={link.url} class="button small">{link.label}</a></li>
+									))}
+								</ul>
+							)}
+						</div>
+					</div>
+				</div>
+			</section>
+		))}
+	</div>
+</BaseLayout>
+
+<style>
+	.memorial-portrait {
+		max-width: 200px;
+		margin: 0 auto;
+	}
+
+	.memorial-portrait figcaption {
+		margin-top: 0.5em;
+		font-size: 0.8em;
+		line-height: 1.5;
+	}
+
+	.memorial-meta {
+		margin-bottom: 2em;
+	}
+</style>
